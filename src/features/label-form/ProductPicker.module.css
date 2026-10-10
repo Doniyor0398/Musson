@@ -1,61 +1,75 @@
 .wrapper {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 14px;
 }
 
 .search {
     width: 100%;
-    padding: 10px 12px;
-    border: 2px solid #e0e0e0;
-    border-radius: 8px;
-    font-size: 15px;
-    background: #fafafa;
+    padding: 14px 16px;
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-md);
+    font-size: 16px;
+    background: var(--color-card);
+    color: var(--color-text);
+    transition: border-color var(--transition), box-shadow var(--transition);
 }
 
 .search:focus {
     outline: none;
-    border-color: #6366f1;
-    background: white;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 4px rgba(30, 58, 95, 0.1);
 }
 
 .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 8px;
-    max-height: 320px;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 10px;
+    max-height: 380px;
     overflow-y: auto;
     padding: 4px;
 }
 
+/* Кнопка продукта — зелёная с белым текстом */
 .button {
-    padding: 10px 12px;
-    border: 2px solid #e0e0e0;
-    border-radius: 8px;
-    background: #fafafa;
-    font-size: 13px;
-    font-weight: 500;
+    padding: 16px 18px;
+    border: none;
+    border-radius: var(--radius-md);
+    background: #22c55e;
+    font-size: 14px;
+    font-weight: 600;
     text-align: left;
     cursor: pointer;
-    transition: all 0.15s;
-    color: #1e1e1e;
+    transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+    color: white;
     line-height: 1.3;
+    box-shadow: 0 2px 8px rgba(34, 197, 94, 0.25);
 }
 
 .button:hover {
-    border-color: #6366f1;
-    background: #6366f1;
+    background: #16a34a;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.35);
 }
 
+.button:active {
+    transform: scale(0.97);
+}
+
+/* Активный (выбранный) продукт — тёмнее и с рамкой */
 .buttonActive {
-    border-color: #6366f1;
-    color: white;
-    background: #6366f1;
+    background: #FFC107;
+    color: #000000;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.4);
+}
+
+.buttonActive:hover {
+    background: #FFC107;
 }
 
 .empty {
     text-align: center;
-    color: #888;
-    font-size: 13px;
-    padding: 20px;
+    color: var(--color-muted);
+    font-size: 14px;
+    padding: 24px;
 }

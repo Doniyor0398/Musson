@@ -10,6 +10,7 @@ import { StorageCondition, STORAGE_OPTIONS } from '../features/label-form/Storag
 import { ModalHours } from '../features/label-form/ModalHours';
 import { ModalQuantity } from '../features/label-form/ModalQuantity';
 import { PrintModal } from '../features/label-preview/PrintModal';
+import { LoadingScreen } from '../components/ui/LoadingScreen/LoadingScreen';
 import { toDateTimeLocal } from '../utils/date';
 import styles from './HomePage.module.css';
 
@@ -26,7 +27,7 @@ export default function HomePage() {
     const [quantity, setQuantity] = useState(1);
     const [step, setStep] = useState(null);
 
-    if (loadingP || loadingE) return <div className={styles.page}>Загрузка...</div>;
+    if (loadingP || loadingE) return <LoadingScreen text="Загружаем продукты..." />;
 
     const product = products.find(p => p.id === selectedProductId);
     const employee = employees.find(e => e.id === selectedEmployeeId);

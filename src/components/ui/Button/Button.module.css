@@ -3,51 +3,66 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
-    padding: 12px 20px;
+    padding: 12px 24px;
     border: none;
-    border-radius: 8px;
+    border-radius: var(--radius-md);
     font-size: 15px;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
-    transition: background 0.2s, transform 0.1s;
+    transition: background var(--transition), transform 0.1s, box-shadow var(--transition);
+    background: var(--color-green-light);
+    color: var(--color-green-dark);
+    box-shadow: var(--shadow-sm);
 }
 
-.button:active {
-    transform: scale(0.98);
+.button:hover:not(:disabled) {
+    background: var(--color-green-light-hover);
+    box-shadow: var(--shadow-md);
 }
 
-.primary {
-    background: #6366f1;
-    color: white;
-}
-
-.primary:hover {
-    background: #4f46e5;
-}
-
-.secondary {
-    background: #1e1e1e;
-    color: white;
-}
-
-.secondary:hover {
-    background: #333;
-}
-
-.danger {
-    background: #ef4444;
-    color: white;
-}
-
-.danger:hover {
-    background: #dc2626;
-}
-
-.fullWidth {
-    width: 100%;
+.button:active:not(:disabled) {
+    transform: scale(0.97);
 }
 
 .button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+}
+
+/* Все варианты теперь тоже зелёные */
+.primary,
+.accent,
+.success {
+    background: var(--color-green-light);
+    color: var(--color-green-dark);
+}
+
+.primary:hover:not(:disabled),
+.accent:hover:not(:disabled),
+.success:hover:not(:disabled) {
+    background: var(--color-green-light-hover);
+}
+
+.secondary {
+    background: var(--color-card);
+    color: var(--color-text);
+    border: 2px solid var(--color-green-light);
+}
+
+.secondary:hover:not(:disabled) {
+    background: var(--color-green-light);
+    color: var(--color-green-dark);
+}
+
+.danger {
+    background: var(--color-danger);
+    color: white;
+}
+
+.danger:hover:not(:disabled) {
+    background: var(--color-danger-hover);
+}
+
+.fullWidth {
+    width: 100%;
 }
