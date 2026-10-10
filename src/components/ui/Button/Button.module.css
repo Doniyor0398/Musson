@@ -1,0 +1,53 @@
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+}
+
+.button:active {
+    transform: scale(0.98);
+}
+
+.primary {
+    background: #6366f1;
+    color: white;
+}
+
+.primary:hover {
+    background: #4f46e5;
+}
+
+.secondary {
+    background: #1e1e1e;
+    color: white;
+}
+
+.secondary:hover {
+    background: #333;
+}
+
+.danger {
+    background: #ef4444;
+    color: white;
+}
+
+.danger:hover {
+    background: #dc2626;
+}
+
+.fullWidth {
+    width: 100%;
+}
+
+.button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
