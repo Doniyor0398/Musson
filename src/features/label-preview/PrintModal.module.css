@@ -1,0 +1,221 @@
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 1000;
+    animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.modal {
+    background: white;
+    border-radius: 16px;
+    padding: 20px 24px 24px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: modalSlide 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+@keyframes modalSlide {
+    from {
+        opacity: 0;
+        transform: translateY(-40px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modalTitle {
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+    color: #555;
+    margin-bottom: 14px;
+}
+
+/* Верх принтера */
+.printerSlot {
+    background: #2c2c2c;
+    border-radius: 12px 12px 0 0;
+    height: 18px;
+    width: 70%;
+    margin: 0 auto;
+    position: relative;
+}
+
+.printerSlot::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 8%;
+    right: 8%;
+    height: 4px;
+    background: #000;
+    border-radius: 0 0 4px 4px;
+}
+
+/* Контейнер этикетки с анимацией */
+.labelContainer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 0 10px;
+    overflow: hidden;
+    background: linear-gradient(to bottom, #f5f5f5 0%, white 100%);
+}
+
+/* Сама этикетка — КВАДРАТ 58×58 мм */
+.labelPaper {
+    width: 58mm;
+    height: 58mm;
+    padding: 5px;
+    font-family: 'Courier New', monospace;
+    font-size: 8px;
+    line-height: 1.15;
+    color: #000;
+    background: white;
+    box-sizing: border-box;
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    animation: printing 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: top;
+}
+
+@keyframes printing {
+    from {
+        max-height: 0;
+        opacity: 0;
+    }
+
+    to {
+        max-height: 60mm;
+        opacity: 1;
+    }
+}
+
+/* Шапка этикетки */
+.labelPaper .header {
+    text-align: center;
+    border-bottom: 1px dashed #000;
+    padding-bottom: 3px;
+    margin-bottom: 3px;
+}
+
+.labelPaper .header h3 {
+    font-size: 10px;
+    font-weight: bold;
+    margin-bottom: 1px;
+}
+
+.labelPaper .header p {
+    font-size: 7px;
+    margin: 0;
+}
+
+/* Продукт */
+.labelPaper .product h4 {
+    font-size: 9px;
+    font-weight: bold;
+    margin-bottom: 2px;
+}
+
+.labelPaper .product p {
+    margin: 0;
+    font-size: 7px;
+}
+
+/* Даты */
+.labelPaper .dates {
+    display: block;
+    text-align: center;
+    font-size: 7px;
+    margin-top: 2px;
+}
+
+/* Подвал */
+.labelPaper .footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-top: 1px dashed #000;
+    padding-top: 2px;
+    margin-top: 2px;
+}
+
+.labelPaper .footer p {
+    margin: 0;
+    font-size: 7px;
+}
+
+.labelPaper .eac {
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+/* Кнопки */
+.actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+    width: 100%;
+}
+
+.btn {
+    flex: 1;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+}
+
+.btn:active {
+    transform: scale(0.98);
+}
+
+.btnPrimary {
+    background: #22c55e;
+    color: white;
+}
+
+.btnPrimary:hover {
+    background: #16a34a;
+}
+
+.btnSecondary {
+    background: #e5e7eb;
+    color: #1e1e1e;
+}
+
+.btnSecondary:hover {
+    background: #d1d5db;
+}

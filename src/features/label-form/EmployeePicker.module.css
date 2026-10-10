@@ -1,0 +1,91 @@
+.trigger {
+    width: 100%;
+    padding: 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    background: white;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    color: #1e1e1e;
+    transition: border-color 0.2s;
+}
+
+.trigger:hover {
+    border-color: #6366f1;
+}
+
+.triggerSelected {
+    border-color: #6366f1;
+    background: #f9f9ff;
+}
+
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 1000;
+    animation: fadeIn 0.2s;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.modal {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    width: 100%;
+    max-width: 480px;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.title {
+    font-size: 17px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+.list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.item {
+    padding: 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    background: white;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.15s;
+}
+
+.item:hover {
+    border-color: #6366f1;
+    background: #f5f5ff;
+}
+
+.itemActive {
+    border-color: #6366f1;
+    background: #6366f1;
+    color: white;
+}

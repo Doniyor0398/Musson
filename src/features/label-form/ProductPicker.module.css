@@ -44,13 +44,13 @@
 
 .button:hover {
     border-color: #6366f1;
-    background: white;
+    background: #6366f1;
 }
 
 .buttonActive {
     border-color: #6366f1;
-    background: #6366f1;
     color: white;
+    background: #6366f1;
 }
 
 .empty {

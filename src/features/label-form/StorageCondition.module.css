@@ -1,0 +1,42 @@
+.group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.option {
+    padding: 20px 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    background: white;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.15s;
+    user-select: none;
+}
+
+.option:hover {
+    border-color: #6366f1;
+}
+
+.optionActive {
+    border-color: #6366f1;
+    background: #6366f1;
+    color: white;
+}
+
+.icon {
+    font-size: 32px;
+    margin-bottom: 6px;
+}
+
+.name {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 2px;
+}
+
+.temp {
+    font-size: 13px;
+    opacity: 0.75;
+}

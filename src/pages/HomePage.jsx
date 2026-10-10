@@ -3,11 +3,14 @@ import { useProducts } from '../hooks/useProducts';
 import { useEmployees } from '../hooks/useEmployees';
 import { COMPANY_INFO } from '../data/company';
 import { Field } from '../components/ui/Field/Field';
-import { Select } from '../components/ui/Select/Select';
 import { Button } from '../components/ui/Button/Button';
-import { LabelPreview } from '../features/label-preview/LabelPreview';
-import { calculateExpiration, toDateTimeLocal } from '../utils/date';
 import { ProductPicker } from '../features/label-form/ProductPicker';
+import { EmployeePicker } from '../features/label-form/EmployeePicker';
+import { StorageCondition, STORAGE_OPTIONS } from '../features/label-form/StorageCondition';
+import { ModalHours } from '../features/label-form/ModalHours';
+import { ModalQuantity } from '../features/label-form/ModalQuantity';
+import { PrintModal } from '../features/label-preview/PrintModal';
+import { toDateTimeLocal } from '../utils/date';
 import styles from './HomePage.module.css';
 
 export default function HomePage() {
@@ -17,94 +20,124 @@ export default function HomePage() {
     const [selectedProductId, setSelectedProductId] = useState('');
     const [selectedEmployeeId, setSelectedEmployeeId] = useState('');
     const [startDate, setStartDate] = useState(toDateTimeLocal(new Date()));
-    const [temperature, setTemperature] = useState('+2');
+    const [storage, setStorage] = useState('');
+
+    const [days, setDays] = useState(null);
+    const [quantity, setQuantity] = useState(1);
+    const [step, setStep] = useState(null);
 
     if (loadingP || loadingE) return <div className={styles.page}>Загрузка...</div>;
 
     const product = products.find(p => p.id === selectedProductId);
     const employee = employees.find(e => e.id === selectedEmployeeId);
-    const expirationDate = product ? calculateExpiration(startDate, product.hours) : null;
+    const canNext = product && employee && storage;
 
-    const handlePrint = () => {
-        window.print();
+    const handleNext = () => {
+        const initialDays = Math.max(1, Math.round((product.hours || 24) / 24));
+        setDays(initialDays);
+        setStep('hours');
     };
+
+    const handleHoursConfirm = (d) => { setDays(d); setStep('quantity'); };
+    const handleQuantityConfirm = (q) => { setQuantity(q); setStep('print'); };
+
+    const handleCloseAll = () => {
+        setStep(null);
+        setSelectedProductId('');
+        setStorage('');
+        setDays(null);
+        setQuantity(1);
+        setStartDate(toDateTimeLocal(new Date()));
+    };
+
+    const storageLabel = STORAGE_OPTIONS.find(s => s.id === storage)?.label || '';
 
     return (
         <div className={styles.page}>
             <div className={styles.header}>
                 <h1>🏷️ {COMPANY_INFO.name}</h1>
-                <p>{COMPANY_INFO.legalName}</p>
+                <p>{COMPANY_INFO.legalName} · {COMPANY_INFO.factAddress}</p>
             </div>
 
-            <div className={styles.layout}>
-                <div className={styles.card}>
-                    <h2>Данные этикетки</h2>
-
-                    <div className={styles.formGroup}>
-                        <label style={{ fontSize: 13, fontWeight: 500, color: '#555', marginBottom: 6, display: 'block' }}>
-                            Продукт
-                        </label>
-                        <ProductPicker
-                            products={products}
-                            selectedId={selectedProductId}
-                            onSelect={setSelectedProductId}
-                        />
-                    </div>
-
-                    <div className={styles.formGroup}>
-                        <Field
-                            label="Упаковано"
-                            id="startDate"
-                            type="datetime-local"
-                            value={startDate}
-                            onChange={e => setStartDate(e.target.value)}
-                        />
-                    </div>
-
-                    <div className={styles.formGroup}>
-                        <Select
-                            label="Исполнитель"
-                            id="employee"
-                            value={selectedEmployeeId}
-                            onChange={e => setSelectedEmployeeId(e.target.value)}
-                        >
-                            <option value="">— Выбери сотрудника —</option>
-                            {employees.map(e => (
-                                <option key={e.id} value={e.id}>{e.name}</option>
-                            ))}
-                        </Select>
-                    </div>
-
-                    <div className={styles.formGroup}>
-                        <Field
-                            label="Температура хранения"
-                            id="temperature"
-                            value={temperature}
-                            onChange={e => setTemperature(e.target.value)}
-                        />
-                    </div>
-
-                    <Button variant="secondary" fullWidth onClick={handlePrint}>
-                        🖨️ Напечатать этикетку
-                    </Button>
-
-                    <p className={styles.hint}>
-                        Кнопка откроет диалог печати. Размер: 58×80 мм.
-                    </p>
-                </div>
-
-                <div className={styles.card}>
-                    <h2>Предпросмотр</h2>
-                    <LabelPreview
-                        company={COMPANY_INFO}
-                        product={product}
-                        employee={employee}
-                        startDate={new Date(startDate)}
-                        expirationDate={expirationDate}
-                        temperature={temperature}
-                    />
-                </div>
+            <div className={styles.section}>
+                <ProductPicker
+                    products={products}
+                    selectedId={selectedProductId}
+                    onSelect={setSelectedProductId}
+                />
             </div>
+
+            <div className={styles.section}>
+                <span className={styles.sectionLabel}>Условие хранения</span>
+                <StorageCondition value={storage} onChange={setStorage} />
+            </div>
+
+            <div className={styles.section}>
+                <Field
+                    label="Дата упаковки"
+                    id="startDate"
+                    type="datetime-local"
+                    value={startDate}
+                    onChange={e => setStartDate(e.target.value)}
+                />
+            </div>
+
+            <div className={styles.section}>
+                <span className={styles.sectionLabel}>Исполнитель</span>
+                <EmployeePicker
+                    employees={employees}
+                    selectedId={selectedEmployeeId}
+                    onSelect={setSelectedEmployeeId}
+                />
+            </div>
+
+            <div className={styles.actions}>
+                <Button
+                    variant="primary"
+                    disabled={!canNext}
+                    onClick={handleNext}
+                    style={{ padding: '16px 60px', fontSize: 17 }}
+                >
+                    Далее →
+                </Button>
+            </div>
+
+            {!canNext && (
+                <p className={styles.hint}>Выбери продукт, условие хранения и сотрудника</p>
+            )}
+
+            {step === 'hours' && (
+                <ModalHours
+                    initialValue={days}
+                    productName={product.name}
+                    onConfirm={handleHoursConfirm}
+                    onCancel={() => setStep(null)}
+                />
+            )}
+
+            {step === 'quantity' && (
+                <ModalQuantity
+                    initialValue={1}
+                    productName={product.name}
+                    onConfirm={handleQuantityConfirm}
+                    onCancel={() => setStep('hours')}
+                />
+            )}
+
+            {step === 'print' && (
+                <PrintModal
+                    company={COMPANY_INFO}
+                    product={product}
+                    employee={employee}
+                    startDate={new Date(startDate)}
+                    hours={days * 24}
+                    days={days}
+                    quantity={quantity}
+                    storageLabel={storageLabel}
+                    onClose={handleCloseAll}
+                    onPrinted={handleCloseAll}
+                />
+            )}
         </div>
     );
 }

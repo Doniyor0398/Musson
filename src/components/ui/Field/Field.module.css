@@ -23,5 +23,5 @@
 .input:focus {
     outline: none;
     border-color: #6366f1;
-    background: white;
+    background: rgb(60, 163, 44);
 }
