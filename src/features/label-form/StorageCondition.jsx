@@ -1,8 +1,8 @@
 import styles from './StorageCondition.module.css';
 
 export const STORAGE_OPTIONS = [
-    { id: 'fridge', icon: '🧊', name: 'Холодильник', temp: 't +2…+6 °C', label: 'при t +2…+6 °C' },
-    { id: 'freezer', icon: '❄️', name: 'Морозильник', temp: 'не выше −18 °C', label: 'при t не выше −18 °C' },
+    { id: 'fridge', icon: '🧊', name: 'Холодильник', temp: ' Условие хранения: при t+2+6 °C', label: 'при t +2…+6 °C' },
+    { id: 'freezer', icon: '❄️', name: 'Морозильник', temp: 'Условие хранения : при t не выше -18 °C', label: 'при t не выше -18 °C' },
 ];
 
 export function StorageCondition({ value, onChange }) {
