@@ -30,12 +30,11 @@
     padding: 4px;
 }
 
-/* Кнопка продукта — зелёная с белым текстом */
 .button {
     padding: 16px 18px;
     border: none;
     border-radius: var(--radius-md);
-    background: #22c55e;
+    background: var(--color-primary);
     font-size: 14px;
     font-weight: 600;
     text-align: left;
@@ -47,7 +46,8 @@
 }
 
 .button:hover {
-    background: #16a34a;
+    background: var(--color-accent);
+
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(34, 197, 94, 0.35);
 }
@@ -58,13 +58,10 @@
 
 /* Активный (выбранный) продукт — тёмнее и с рамкой */
 .buttonActive {
-    background: #FFC107;
-    color: #000000;
-    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.4);
-}
+    background: var(--color-accent);
+    color: white;
+    box-shadow: 0 0 0 3px rgba(255, 130, 52, 0.3);
 
-.buttonActive:hover {
-    background: #FFC107;
 }
 
 .empty {

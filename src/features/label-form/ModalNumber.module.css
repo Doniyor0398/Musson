@@ -63,7 +63,7 @@
     font-weight: 700;
     text-align: center;
     padding: 14px;
-    border: 2px solid #6366f1;
+    border: 2px solid var(--color-border);
     border-radius: 12px;
     background: #f9f9ff;
 }
@@ -73,7 +73,7 @@
     padding: 16px;
     border: none;
     border-radius: 10px;
-    background: #22c55e;
+    background: var(--color-primary);
     color: white;
     font-size: 17px;
     font-weight: 700;
@@ -82,5 +82,5 @@
 }
 
 .okBtn:hover {
-    background: #16a34a;
+    background: var(--color-accent);
 }

@@ -1,7 +1,8 @@
 .overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(26, 20, 15, 0.55);
+    backdrop-filter: blur(6px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -21,201 +22,161 @@
 }
 
 .modal {
-    background: white;
-    border-radius: 16px;
-    padding: 20px 24px 24px;
+    background: var(--color-card);
+    border-radius: 24px;
+    padding: 22px 20px 20px;
     width: 100%;
-    max-width: 420px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    animation: modalSlide 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    max-width: 340px;
+    box-shadow:
+        0 30px 80px rgba(0, 0, 0, 0.35),
+        0 0 0 1px rgba(255, 255, 255, 0.6) inset;
+    animation: modalSlide 0.45s cubic-bezier(0.16, 1, 0.3, 1);
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: stretch;
 }
 
 @keyframes modalSlide {
     from {
         opacity: 0;
-        transform: translateY(-40px);
+        transform: translateY(-30px) scale(0.97);
     }
 
     to {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(0) scale(1);
     }
+}
+
+/* ===== Заголовок ===== */
+.header {
+    text-align: center;
+    margin-bottom: 18px;
 }
 
 .modalTitle {
-    font-size: 16px;
-    font-weight: 600;
-    text-align: center;
-    color: #555;
-    margin-bottom: 14px;
+    font-family: var(--font-heading);
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--color-text);
 }
 
-/* Верх принтера */
+.modalSub {
+    margin-top: 4px;
+    font-size: 13px;
+    color: var(--color-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ===== Принтер ===== */
 .printerSlot {
-    background: #2c2c2c;
-    border-radius: 12px 12px 0 0;
-    height: 18px;
-    width: 70%;
-    margin: 0 auto;
     position: relative;
+    z-index: 2;
+    height: 30px;
+    border-radius: 14px 14px 6px 6px;
+    background: linear-gradient(180deg, #4b4b4b 0%, #2b2b2b 55%, #1c1c1c 100%);
+    box-shadow:
+        0 8px 16px rgba(0, 0, 0, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
+/* Индикатор */
+.printerSlot::before {
+    content: '';
+    position: absolute;
+    left: 14px;
+    top: 9px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-primary);
+    box-shadow: 0 0 8px var(--color-primary);
+    animation: led 1s ease-in-out infinite;
+}
+
+@keyframes led {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.35;
+    }
+}
+
+/* Щель */
 .printerSlot::after {
     content: '';
     position: absolute;
-    bottom: 0;
-    left: 8%;
-    right: 8%;
-    height: 4px;
+    left: 10px;
+    right: 10px;
+    bottom: 5px;
+    height: 5px;
+    border-radius: 3px;
     background: #000;
-    border-radius: 0 0 4px 4px;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.8);
 }
 
-/* Контейнер этикетки с анимацией */
+/* ===== Зона, откуда выезжает чек ===== */
 .labelContainer {
-    width: 100%;
+    position: relative;
+    margin-top: -6px;
+    padding: 0 16px 18px;
     display: flex;
     justify-content: center;
-    padding: 0 10px;
+    align-items: flex-start;
     overflow: hidden;
-    background: linear-gradient(to bottom, #f5f5f5 0%, white 100%);
+    border-radius: 0 0 16px 16px;
+    background: linear-gradient(180deg, #e7dfd6 0%, #f4efe9 40%);
+    box-shadow: inset 0 10px 10px -8px rgba(0, 0, 0, 0.3);
 }
 
-/* Сама этикетка — КВАДРАТ 58×58 мм */
-.labelPaper {
-    width: 58mm;
-    height: 58mm;
-    padding: 5px;
-    font-family: 'Courier New', monospace;
-    font-size: 8px;
-    line-height: 1.15;
-    color: #000;
-    background: white;
-    box-sizing: border-box;
-    border-left: 1px solid #ddd;
-    border-right: 1px solid #ddd;
-    border-bottom: 1px solid #ddd;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-
-    animation: printing 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-    transform-origin: top;
-}
-
-@keyframes printing {
-    from {
-        max-height: 0;
-        opacity: 0;
-    }
-
-    to {
-        max-height: 60mm;
-        opacity: 1;
-    }
-}
-
-/* Шапка этикетки */
-.labelPaper .header {
-    text-align: center;
-    border-bottom: 1px dashed #000;
-    padding-bottom: 3px;
-    margin-bottom: 3px;
-}
-
-.labelPaper .header h3 {
-    font-size: 10px;
-    font-weight: bold;
-    margin-bottom: 1px;
-}
-
-.labelPaper .header p {
-    font-size: 7px;
-    margin: 0;
-}
-
-/* Продукт */
-.labelPaper .product h4 {
-    font-size: 9px;
-    font-weight: bold;
-    margin-bottom: 2px;
-}
-
-.labelPaper .product p {
-    margin: 0;
-    font-size: 7px;
-}
-
-/* Даты */
-.labelPaper .dates {
-    display: block;
-    text-align: center;
-    font-size: 7px;
-    margin-top: 2px;
-}
-
-/* Подвал */
-.labelPaper .footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    border-top: 1px dashed #000;
-    padding-top: 2px;
-    margin-top: 2px;
-}
-
-.labelPaper .footer p {
-    margin: 0;
-    font-size: 7px;
-}
-
-.labelPaper .eac {
-    font-size: 11px;
-    font-weight: bold;
-    letter-spacing: 1px;
-}
-
-/* Кнопки */
+/* ===== Кнопки ===== */
 .actions {
     display: flex;
-    gap: 10px;
+    gap: 12px;
     margin-top: 18px;
     width: 100%;
 }
 
 .btn {
     flex: 1;
-    padding: 14px;
-    border: none;
-    border-radius: 10px;
-    font-size: 15px;
+    padding: 16px;
+    border: 2px solid transparent;
+    border-radius: 14px;
+    font-family: var(--font-body);
+    font-size: 16px;
     font-weight: 700;
+    color: white;
     cursor: pointer;
-    transition: background 0.2s, transform 0.1s;
+    transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
 }
 
 .btn:active {
-    transform: scale(0.98);
+    transform: scale(0.97);
 }
 
+/* Зелёная (как «Сохранить») */
 .btnPrimary {
-    background: #22c55e;
-    color: white;
+    background: var(--color-primary);
+    box-shadow: var(--shadow-md);
 }
 
 .btnPrimary:hover {
-    background: #16a34a;
+    background: var(--color-primary-hover);
 }
 
+/* Оранжевая с рамкой (как «Отмена») */
 .btnSecondary {
-    background: #e5e7eb;
-    color: #1e1e1e;
+    background: var(--color-accent);
+    border-color: var(--color-border);
 }
 
 .btnSecondary:hover {
-    background: #d1d5db;
+    background: var(--color-accent-hover);
 }

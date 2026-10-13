@@ -33,14 +33,14 @@
 .primary,
 .accent,
 .success {
-    background: var(--color-green-light);
-    color: var(--color-green-dark);
+    background: var(--color-primary);
+    color: white;
 }
 
 .primary:hover:not(:disabled),
 .accent:hover:not(:disabled),
 .success:hover:not(:disabled) {
-    background: var(--color-green-light-hover);
+    background: var(--color-accent);
 }
 
 .secondary {
@@ -65,4 +65,27 @@
 
 .fullWidth {
     width: 100%;
+}
+
+.primary,
+.accent,
+.success {
+    background: var(--color-primary);
+    color: white;
+}
+
+.primary:hover,
+.accent:hover,
+.success:hover {
+    background: var(--color-primary-hover);
+}
+
+/* Кнопка Печать в модалке будет Оранжевой */
+.btnPrimary {
+    background: var(--color-accent);
+    color: white;
+}
+
+.btnPrimary:hover {
+    /* background: var(--color-accent-hover); */
 }

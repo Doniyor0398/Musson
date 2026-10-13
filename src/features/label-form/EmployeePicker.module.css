@@ -1,7 +1,7 @@
 .trigger {
     width: 100%;
     padding: 16px;
-    border: 2px solid #e0e0e0;
+    border: 2px solid var(--color-border);
     border-radius: 10px;
     background: white;
     font-size: 16px;
@@ -13,11 +13,11 @@
 }
 
 .trigger:hover {
-    border-color: #6366f1;
+    border-color: var(--color-border);
 }
 
 .triggerSelected {
-    border-color: #6366f1;
+    border-color: var(--color-border);
     background: #f9f9ff;
 }
 
@@ -69,7 +69,7 @@
 
 .item {
     padding: 12px;
-    border: 2px solid #e0e0e0;
+    border: 2px solid var(--color-border);
     border-radius: 8px;
     background: white;
     font-size: 14px;
@@ -80,12 +80,13 @@
 }
 
 .item:hover {
-    border-color: #6366f1;
-    background: #f5f5ff;
+    border-color: var(--color-border);
+    background: var(--color-accent);
+    color: white;
 }
 
 .itemActive {
-    border-color: #6366f1;
-    background: #6366f1;
+    border-color: var(--color-border);
+    background: var(--color-accent);
     color: white;
 }

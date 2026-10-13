@@ -13,7 +13,7 @@
 .input {
     width: 100%;
     padding: 10px 12px;
-    border: 2px solid #e0e0e0;
+    border: 2px solid var(--color-border);
     border-radius: 8px;
     font-size: 15px;
     background: #fafafa;
@@ -22,6 +22,4 @@
 
 .input:focus {
     outline: none;
-    border-color: #6366f1;
-    background: rgb(60, 163, 44);
 }

@@ -32,7 +32,7 @@
     padding: 12px 24px;
     border: none;
     border-radius: var(--radius-md);
-    background: #22c55e;
+    background: var(--color-primary);
     color: white;
     font-size: 14px;
     font-weight: 700;
@@ -42,7 +42,7 @@
 }
 
 .backBtn:hover {
-    background: #16a34a;
+    background: var(--color-accent)
 }
 
 .backBtn:active {
@@ -93,7 +93,7 @@
     font-weight: 700;
     letter-spacing: 16px;
     padding: 18px;
-    border: 2px solid #22c55e;
+    border: 2px solid var(--color-primary);
     border-radius: var(--radius-md);
     background: #f0fdf4;
     margin-bottom: 20px;
@@ -139,12 +139,14 @@
 }
 
 .tab:hover {
-    color: var(--color-primary);
+    background: var(--color-accent);
+    color: white;
 }
 
 .tabActive {
-    background: #22c55e;
+    background: var(--color-accent);
     color: white;
+    border-color: var(--color-accent);
     box-shadow: 0 2px 8px rgba(34, 197, 94, 0.25);
 }
 
@@ -180,7 +182,7 @@
 
 .search:focus {
     outline: none;
-    border-color: #22c55e;
+    border-color: var(--color-primary);
     box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.1);
 }
 
@@ -188,7 +190,7 @@
     padding: 12px 24px;
     border: none;
     border-radius: var(--radius-md);
-    background: #22c55e;
+    background: var(--color-primary);
     color: white;
     font-size: 14px;
     font-weight: 700;
@@ -199,7 +201,7 @@
 }
 
 .addBtn:hover {
-    background: #16a34a;
+    background: var(--color-accent);
 }
 
 .addBtn:active {
@@ -367,7 +369,7 @@
 .formGroup textarea:focus,
 .formGroup select:focus {
     outline: none;
-    border-color: #22c55e;
+    border-color: var(--color-primary);
     box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.1);
 }
 
@@ -404,22 +406,22 @@
 }
 
 .modalBtnPrimary {
-    background: #22c55e;
+    background: var(--color-primary);
     color: white;
     box-shadow: 0 2px 8px rgba(34, 197, 94, 0.25);
 }
 
 .modalBtnPrimary:hover {
-    background: #16a34a;
+    background: var(--color-accent);
 }
 
 .modalBtnSecondary {
-    background: var(--color-bg);
-    color: var(--color-text);
+    background: var(--color-accent);
+    color: var(--color-card);
     border: 2px solid var(--color-border);
 }
 
 .modalBtnSecondary:hover {
-    border-color: #22c55e;
-    color: #16a34a;
+    background: var(--color-accent-hover);
+    color: var(--color-card)
 }
