@@ -1,15 +1,20 @@
 import styles from './NumPad.module.css';
 
-export function NumPad({ value, onChange, max = 99999 }) {
+export function NumPad({ value, onChange, max = 99999, asString = false, maxLength = 4 }) {
     const press = (digit) => {
         const next = String(value || '') + digit;
-        if (Number(next) <= max) onChange(Number(next));
+        if (asString) {
+            if (next.length <= maxLength) onChange(next);
+        } else if (Number(next) <= max) {
+            onChange(Number(next));
+        }
     };
 
-    const clear = () => onChange(0);
+    const clear = () => onChange(asString ? '' : 0);
+
     const backspace = () => {
-        const str = String(value || '');
-        onChange(Number(str.slice(0, -1)) || 0);
+        const str = String(value || '').slice(0, -1);
+        onChange(asString ? str : Number(str) || 0);
     };
 
     return (
