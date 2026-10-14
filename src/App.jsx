@@ -1,13 +1,20 @@
+import { lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import HomePage from './pages/HomePage';
-import AdminPage from './pages/AdminPage';
 import LoginPage from './pages/LoginPage';
 import KitchenPage from './pages/KitchenPage';
 import ProductsPage from './pages/ProductsPage';
 import CleanersPage from './pages/CleanersPage';
 import GoodsPage from './pages/GoodsPage';
+import InventoryPage from './pages/InventoryPage';
+import InventoryZonePage from './pages/InventoryZonePage';
+import InventoryHistoryPage from './pages/InventoryHistoryPage';
 import { PinGate } from './features/auth/PinGate';
 import { ProtectedRoute } from './features/auth/ProtectedRoute';
+import { LoadingScreen } from './components/ui/LoadingScreen/LoadingScreen';
+
+// Lazy load AdminPage — грузится ТОЛЬКО после ввода PIN
+const AdminPage = lazy(() => import('./pages/AdminPage'));
 
 function App() {
   return (
@@ -30,40 +37,55 @@ function App() {
       />
 
       <Route
-        path="/kitchen/admin"
-        element={
-          <ProtectedRoute>
-            <PinGate section="kitchen" backTo="/kitchen">
-              <AdminPage />
-            </PinGate>
-          </ProtectedRoute>
-        }
-      />
-      <Route
         path="/kitchen/cleaners"
-        element={
-          <ProtectedRoute>
-            <CleanersPage />
-          </ProtectedRoute>
-        }
+        element={<ProtectedRoute><CleanersPage /></ProtectedRoute>}
       />
 
       <Route
         path="/kitchen/goods"
+        element={<ProtectedRoute><GoodsPage /></ProtectedRoute>}
+      />
+
+      <Route
+        path="/kitchen/inventory"
+        element={<ProtectedRoute><InventoryPage /></ProtectedRoute>}
+      />
+
+      <Route
+        path="/kitchen/inventory/history"
         element={
           <ProtectedRoute>
-            <GoodsPage />
+            <InventoryHistoryPage />
           </ProtectedRoute>
         }
       />
 
-      {/* Заготовка на будущее для бара */}
+      <Route
+        path="/kitchen/inventory/:zone"
+        element={<ProtectedRoute><InventoryZonePage /></ProtectedRoute>}
+      />
+
+      <Route
+        path="/kitchen/admin"
+        element={
+          <ProtectedRoute>
+            <PinGate section="kitchen" backTo="/kitchen">
+              <Suspense fallback={<LoadingScreen text="Открываем админку..." />}>
+                <AdminPage />
+              </Suspense>
+            </PinGate>
+          </ProtectedRoute>
+        }
+      />
+
       <Route
         path="/bar/admin"
         element={
           <ProtectedRoute>
             <PinGate section="bar" backTo="/">
-              <AdminPage />
+              <Suspense fallback={<LoadingScreen text="Открываем админку..." />}>
+                <AdminPage />
+              </Suspense>
             </PinGate>
           </ProtectedRoute>
         }

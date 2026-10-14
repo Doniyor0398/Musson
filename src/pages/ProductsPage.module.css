@@ -1,18 +1,38 @@
 .page {
-    position: relative;
     min-height: 100vh;
-    padding: 80px 32px 40px;
+    padding: 24px 32px 40px;
     box-sizing: border-box;
     background: var(--color-bg);
     max-width: 900px;
     margin: 0 auto;
 }
 
+/* ===== Верхняя панель ===== */
+.topBar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.titleBlock h1 {
+    font-family: var(--font-heading);
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--color-text);
+    letter-spacing: 1px;
+    line-height: 1.15;
+}
+
+.titleBlock p {
+    font-size: 14px;
+    color: var(--color-muted);
+    margin-top: 4px;
+}
+
 /* ===== Кнопка «Назад» ===== */
 .backBtn {
-    position: absolute;
-    top: 24px;
-    left: 24px;
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -26,6 +46,8 @@
     text-decoration: none;
     box-shadow: var(--shadow-sm);
     transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.1s;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .backBtn:hover {
@@ -36,26 +58,6 @@
 
 .backBtn:active {
     transform: scale(0.97);
-}
-
-/* ===== Шапка ===== */
-.header {
-    text-align: center;
-    margin-bottom: 28px;
-}
-
-.header h1 {
-    font-family: var(--font-heading);
-    font-size: 32px;
-    font-weight: 700;
-    color: var(--color-text);
-    letter-spacing: 1px;
-    margin-bottom: 6px;
-}
-
-.header p {
-    font-size: 14px;
-    color: var(--color-muted);
 }
 
 /* ===== Секции ===== */
@@ -78,6 +80,7 @@
     display: block;
 }
 
+/* ===== Действия ===== */
 .actions {
     display: flex;
     justify-content: center;
@@ -92,39 +95,27 @@
 }
 
 /* ===== Адаптив ===== */
-@media (max-width: 600px) {
-    .page {
-        padding: 70px 16px 32px;
-    }
-
-    .backBtn {
-        top: 16px;
-        left: 16px;
-        padding: 8px 14px;
-        font-size: 13px;
-    }
-
-    .header h1 {
-        font-size: 26px;
-    }
-}
-
 @media (max-width: 700px) {
     .page {
         padding: 16px 16px 32px;
     }
 
-    .backBtn {
-        width: 100%;
-        justify-content: center;
+    .topBar {
+        gap: 10px;
         margin-bottom: 16px;
     }
 
-    .header h1 {
-        font-size: 24px;
+    .titleBlock h1 {
+        font-size: 20px;
+        letter-spacing: 0;
     }
 
-    .header p {
+    .titleBlock p {
+        font-size: 12px;
+    }
+
+    .backBtn {
+        padding: 10px 14px;
         font-size: 13px;
     }
 

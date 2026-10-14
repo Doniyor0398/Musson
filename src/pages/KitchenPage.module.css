@@ -10,9 +10,6 @@
 
 /* ===== Кнопка «Назад» ===== */
 .backBtn {
-    position: absolute;
-    top: 24px;
-    right: 24px;
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -179,8 +176,6 @@
 
     .backBtn {
         position: static;
-        margin-bottom: 20px;
-        width: 100%;
         justify-content: center;
     }
 
@@ -224,62 +219,4 @@
 
 .adminBtn:active {
     transform: scale(0.97);
-}
-
-@media (max-width: 600px) {
-    .page {
-        padding: 16px 16px 32px;
-    }
-
-    .topBar {
-        flex-direction: column;
-        gap: 10px;
-        align-items: stretch;
-        margin-bottom: 20px;
-    }
-
-    .backBtn,
-    .adminBtn {
-        justify-content: center;
-        white-space: nowrap;
-        width: 100%;
-    }
-
-    .header {
-        padding-top: 0;
-        margin-bottom: 24px;
-    }
-
-    .header h1 {
-        font-size: 26px;
-    }
-}
-
-@media (max-width: 600px) {
-    .page {
-        padding: 16px 16px 32px;
-    }
-
-    .topBar {
-        flex-direction: column;
-        gap: 10px;
-        align-items: stretch;
-        margin-bottom: 20px;
-    }
-
-    .backBtn,
-    .adminBtn {
-        justify-content: center;
-        white-space: nowrap;
-        width: 100%;
-    }
-
-    .header {
-        padding-top: 0;
-        margin-bottom: 24px;
-    }
-
-    .header h1 {
-        font-size: 26px;
-    }
 }

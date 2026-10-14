@@ -21,13 +21,14 @@ export default function GoodsPage() {
 
     return (
         <div className={styles.page}>
-            <Link to="/kitchen" className={styles.backBtn}>
-                ← Назад
-            </Link>
-
-            <div className={styles.header}>
-                <h1>Хозтовары</h1>
-                <p>Маркировка хозяйственных товаров</p>
+            <div className={styles.topBar}>
+                <div className={styles.titleBlock}>
+                    <h1>Хозтовары</h1>
+                    <p>Маркировка хозяйственных товаров</p>
+                </div>
+                <Link to="/kitchen" className={styles.backBtn}>
+                    ← Назад
+                </Link>
             </div>
 
             <div className={styles.section}>

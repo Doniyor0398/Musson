@@ -5,6 +5,8 @@ import styles from './LoginPage.module.css';
 const AUTH_LOGIN = import.meta.env.VITE_LOGIN || 'musson';
 const AUTH_PASSWORD = import.meta.env.VITE_PASSWORD || 'musson2026';
 
+const norm = (s) => String(s ?? '').trim();
+
 export default function LoginPage() {
     const navigate = useNavigate();
     const [login, setLogin] = useState('');
@@ -14,7 +16,12 @@ export default function LoginPage() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (login === AUTH_LOGIN && password === AUTH_PASSWORD) {
+
+        const ok =
+            norm(login).toLowerCase() === AUTH_LOGIN.toLowerCase() &&
+            norm(password) === AUTH_PASSWORD;
+
+        if (ok) {
             sessionStorage.setItem('auth', 'ok');
             navigate('/');
         } else {
@@ -41,6 +48,9 @@ export default function LoginPage() {
                             onChange={(e) => setLogin(e.target.value)}
                             placeholder="musson"
                             autoComplete="username"
+                            autoCapitalize="none"
+                            autoCorrect="off"
+                            spellCheck={false}
                             autoFocus
                         />
                     </div>
@@ -55,6 +65,9 @@ export default function LoginPage() {
                                 onChange={(e) => setPassword(e.target.value)}
                                 placeholder="••••••"
                                 autoComplete="current-password"
+                                autoCapitalize="none"
+                                autoCorrect="off"
+                                spellCheck={false}
                             />
                             <button
                                 type="button"

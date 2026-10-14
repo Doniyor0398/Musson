@@ -27,13 +27,14 @@ export default function CleanersPage() {
 
     return (
         <div className={styles.page}>
-            <Link to="/kitchen" className={styles.backBtn}>
-                ← Назад
-            </Link>
-
-            <div className={styles.header}>
-                <h1>Моющие средства</h1>
-                <p>Маркировка емкостей с рабочими растворами</p>
+            <div className={styles.topBar}>
+                <div className={styles.titleBlock}>
+                    <h1>Моющие средства</h1>
+                    <p>Маркировка емкостей с рабочими растворами</p>
+                </div>
+                <Link to="/kitchen" className={styles.backBtn}>
+                    ← Назад
+                </Link>
             </div>
 
             <div className={styles.section}>

@@ -56,13 +56,14 @@ export default function ProductsPage() {
 
     return (
         <div className={styles.page}>
-            <Link to="/kitchen" className={styles.backBtn}>
-                ← Назад
-            </Link>
-
-            <div className={styles.header}>
-                <h1>Продукты</h1>
-                <p>Заготовки и полуфабрикаты</p>
+            <div className={styles.topBar}>
+                <div className={styles.titleBlock}>
+                    <h1>Продукты</h1>
+                    <p>Заготовки и полуфабрикаты</p>
+                </div>
+                <Link to="/kitchen" className={styles.backBtn}>
+                    ← Назад
+                </Link>
             </div>
 
             <div className={styles.section}>

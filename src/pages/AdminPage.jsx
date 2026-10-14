@@ -108,8 +108,8 @@ export default function AdminPage() {
     // ===== АДМИНКА =====
     return (
         <div className={styles.page}>
-            <div className={styles.header}>
-                <div className={styles.headerTitle}>
+            <div className={styles.topBar}>
+                <div className={styles.titleBlock}>
                     <h1>⚙️ Админ-панель</h1>
                     <p>Управление продуктами и сотрудниками</p>
                 </div>
