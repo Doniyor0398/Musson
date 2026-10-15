@@ -73,3 +73,87 @@
     font-weight: bold;
     letter-spacing: 2px;
 }
+
+/* Этикетка 58 мм. Только чёрный текст и линии: термопринтер не печатает заливки */
+.lbl {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding-left: 2mm;
+    /* вместе с padding .print-label даёт 4 мм слева */
+    color: #000;
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: left;
+}
+
+.brand {
+    text-align: center;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.legal {
+    text-align: center;
+    font-size: 7.5px;
+    line-height: 1.3;
+    padding-bottom: 3px;
+    border-bottom: 1px dashed #000;
+}
+
+.name {
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.15;
+    padding: 4px 0 2px;
+    word-break: break-word;
+}
+
+.info {
+    font-size: 9px;
+    line-height: 1.35;
+}
+
+.info b {
+    font-weight: 700;
+}
+
+.dates {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-top: 2px;
+    font-size: 10px;
+    line-height: 1.3;
+}
+
+.dates b {
+    font-weight: 700;
+}
+
+.foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 4px;
+    padding-top: 3px;
+    border-top: 1px dashed #000;
+}
+
+.footLabel {
+    display: block;
+    font-size: 8px;
+}
+
+.footName {
+    display: block;
+    font-size: 9px;
+    font-weight: 700;
+}
+
+.eac {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}

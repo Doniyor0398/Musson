@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { formatDate } from '../../utils/date';
 import styles from './PrintModal.module.css';
 
@@ -30,34 +31,37 @@ export function PrintModal({
         setTimeout(onPrinted, 600);
     };
 
-    // Один компонент этикетки для переиспользования
     const LabelContent = () => (
-        <>
+        <div className="label-inner">
+            {/* 1. ШАПКА */}
             <div className="label-header">
                 <h3>{company.name}</h3>
                 <p>{company.legalName}</p>
                 <p>{company.factAddress}</p>
             </div>
 
-            <div className="label-product">
-                <h4>{product.name}</h4>
+            {/* 2. ТЕЛО ЧЕКА */}
+            <div className="label-body">
+                <div className="label-product">
+                    <h4>{product.name}</h4>
+                </div>
+                <div className="label-info-block">
+                    <p><strong>Условия хранения:</strong> {storageLabel}</p>
+                    <p><strong>Срок:</strong> {days} сут.</p>
+                    <p>Упаковано: {formatDate(startDate)}</p>
+                    <p>Годен до: {formatDate(expirationDate)}</p>
+                </div>
             </div>
 
-            <div className="label-storage">
-                <p><strong>Условия хранения:</strong> {storageLabel}</p>
-            </div>
-
-            <div className="label-shelf">
-                <p><strong>Срок:</strong> {days} сут.</p>
-                <p>Упаковано: {formatDate(startDate)}</p>
-                <p>Годен до: {formatDate(expirationDate)}</p>
-            </div>
-
+            {/* 3. ПОДВАЛ */}
             <div className="label-footer">
-                <p><strong>Исполнитель:</strong> {employee?.name || '—'}</p>
+                <div className="label-executor">
+                    <p className="label-footer-title">Исполнитель:</p>
+                    <p className="label-footer-name">{employee?.name || '—'}</p>
+                </div>
                 <span className="label-eac">EAC</span>
             </div>
-        </>
+        </div>
     );
 
     return (
@@ -72,7 +76,6 @@ export function PrintModal({
 
                 <div className={styles.printerSlot} />
 
-                {/* ПРЕДПРОСМОТР — только 1 этикетка, только на экране */}
                 <div className={styles.labelContainer}>
                     <div className="label-roll-wrap">
                         <div className="print-label">
@@ -81,14 +84,16 @@ export function PrintModal({
                     </div>
                 </div>
 
-                {/* ПЕЧАТЬ — N этикеток, только для принтера */}
-                <div className="print-only-container">
-                    {Array.from({ length: quantity }).map((_, i) => (
-                        <div key={i} className="print-label">
-                            <LabelContent />
-                        </div>
-                    ))}
-                </div>
+                {createPortal(
+                    <div className="print-only-container">
+                        {Array.from({ length: quantity }).map((_, i) => (
+                            <div key={i} className="print-label">
+                                <LabelContent />
+                            </div>
+                        ))}
+                    </div>,
+                    document.body
+                )}
 
                 <div className={styles.actions}>
                     <button className={`${styles.btn} ${styles.btnSecondary}`} onClick={onClose}>

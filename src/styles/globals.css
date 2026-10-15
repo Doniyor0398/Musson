@@ -62,25 +62,36 @@ textarea {
 }
 
 /* ============================================
-   ЭТИКЕТКА (общий класс для экрана и печати)
+   ЭТИКЕТКА (Симметричное центрирование по ХАССП)
    ============================================ */
 .print-label {
     width: 58mm;
-    height: auto;
-    min-height: 40mm;
-    padding: 25px 6px;
+    height: 60mm;
+    /* Жесткий шаг чековой ленты */
     box-sizing: border-box;
     background: white;
-    color: black;
+    color: #000000;
     font-family: 'Courier New', monospace;
-    font-size: 9px;
-    line-height: 1.3;
+    font-size: 9.5px;
+    line-height: 1.25;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    overflow: hidden;
 }
 
-/* Обёртка работает как щель принтера: всё, что выше, скрыто */
+/* Внутренний контейнер: отвечает за симметрию и боковые поля */
+.label-inner {
+    padding: 0 16px;
+    /* 16px ~ 4.5мм боковые рамки безопасности */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* 🎯 Магия тут: собирает всё в кучу и центрирует вертикально */
+    height: 100%;
+    box-sizing: border-box;
+}
+
+/* Эмуляция принтера на экране */
 .label-roll-wrap {
     overflow: hidden;
     display: flex;
@@ -88,10 +99,9 @@ textarea {
     align-items: flex-start;
 }
 
-/* Только для предпросмотра на экране (на печать не влияет) */
 .label-roll-wrap .print-label {
     animation: labelOut 0.4s steps(40, end) both;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
     will-change: transform;
 }
 
@@ -105,72 +115,98 @@ textarea {
     }
 }
 
-
-
+/* Шапка компании */
 .print-label .label-header {
     text-align: center;
-    border-bottom: 1px dashed #000;
-    padding-bottom: 4px;
+    border-bottom: 1px dashed #000000;
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+    flex-shrink: 0;
 }
 
 .print-label .label-header h3 {
-    font-size: 14px;
+    font-size: 11.5px;
     font-weight: bold;
-    margin-bottom: 2px;
+    margin: 0 0 1px 0;
+    text-transform: uppercase;
 }
 
 .print-label .label-header p {
-    font-size: 8px;
+    font-size: 7.5px;
     margin: 0;
+    line-height: 1.1;
+}
+
+/* Тело чека (Товар и сроки идут плотно друг за другом, без дыр) */
+.print-label .label-body {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    margin-bottom: 5px;
+    /* Небольшой зазор перед линией футера */
+    flex-shrink: 0;
 }
 
 .print-label .label-product h4 {
-    font-size: 12px;
+    font-size: 11.5px;
     font-weight: bold;
-    margin: 2px 0;
+    margin: 2px 0 3px 0;
+    line-height: 1.15;
+    word-wrap: break-word;
 }
 
-.print-label .label-storage p,
-.print-label .label-shelf p {
-    margin: 0;
-    font-size: 9px;
+.print-label .label-info-block p {
+    margin: 1px 0;
+    font-size: 9.5px;
 }
 
-.print-label .label-shelf {
-    display: flex;
-    flex-direction: column;
-    gap: 1px;
-}
-
+/* Подвал чека */
 .print-label .label-footer {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    border-top: 1px dashed #000;
-    padding-top: 4px;
-    margin-top: 6px;
+    border-top: 1px dashed #000000;
+    padding-top: 5px;
+    gap: 4px;
+    flex-shrink: 0;
 }
 
-.print-label .label-footer p {
-    margin: 0;
+.print-label .label-executor {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.print-label .label-footer-title {
+    font-size: 7.5px;
+    font-weight: bold;
+}
+
+.print-label .label-footer-name {
     font-size: 9px;
+    font-weight: bold;
+    word-wrap: break-word;
+    line-height: 1.1;
 }
 
 .print-label .label-eac {
     font-size: 13px;
     font-weight: bold;
-    letter-spacing: 1px;
+    line-height: 1;
+    flex-shrink: 0;
 }
 
-/* Контейнер с копиями — скрыт на экране */
 .print-only-container {
     display: none;
 }
 
 /* ============================================
-   ПЕЧАТЬ
+   ПРОФЕССИОНАЛЬНЫЕ НАСТРОЙКИ СИСТЕМНОЙ ПЕЧАТИ
    ============================================ */
 @media print {
+    #root {
+        display: none !important;
+    }
 
     html,
     body {
@@ -178,12 +214,8 @@ textarea {
         height: 60mm !important;
         margin: 0 !important;
         padding: 0 !important;
-        background: white !important;
-        overflow: visible !important;
-    }
-
-    body * {
-        visibility: hidden !important;
+        background: #ffffff !important;
+        overflow: hidden !important;
     }
 
     .print-only-container {
@@ -192,26 +224,31 @@ textarea {
         top: 0 !important;
         left: 0 !important;
         width: 58mm !important;
+        height: 60mm !important;
         margin: 0 !important;
         padding: 0 !important;
     }
 
-    .print-only-container,
-    .print-only-container * {
-        visibility: visible !important;
-    }
-
     .print-only-container .print-label {
-        height: auto !important;
-        min-height: 40mm !important;
+        display: flex !important;
+        width: 58mm !important;
+        height: 60mm !important;
+        box-sizing: border-box !important;
+
+        page-break-before: avoid !important;
         page-break-after: always !important;
         break-after: page !important;
         page-break-inside: avoid !important;
         break-inside: avoid !important;
-        animation: none !important;
-        box-shadow: none !important;
-        border: none !important;
+
+        background: #ffffff !important;
         margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+    }
+
+    .print-only-container .print-label * {
+        visibility: visible !important;
     }
 
     .print-only-container .print-label:last-child {
@@ -221,6 +258,6 @@ textarea {
 
     @page {
         size: 58mm 60mm;
-        margin: 0;
+        margin: 0 !important;
     }
 }

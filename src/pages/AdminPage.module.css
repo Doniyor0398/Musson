@@ -513,11 +513,8 @@
         letter-spacing: 0;
     }
 
-    /* Скрываем колонки «Срок» и «Порция» на мобильном */
-    .table th:nth-child(2),
-    .table td:nth-child(2),
-    .table th:nth-child(3),
-    .table td:nth-child(3) {
+
+    .hideMobile {
         display: none;
     }
 
@@ -562,4 +559,8 @@
     .formRow {
         grid-template-columns: 1fr;
     }
+}
+
+.hideMobile {
+    display: none;
 }
