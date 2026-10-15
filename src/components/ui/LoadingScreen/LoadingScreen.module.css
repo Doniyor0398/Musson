@@ -22,15 +22,10 @@
     }
 }
 
-/* Затемнение поверх фото */
 .overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg,
-            rgba(0, 0, 0, 0.7) 0%,
-            rgba(0, 0, 0, 0.5) 50%,
-            rgba(0, 0, 0, 0.7) 100%);
-    backdrop-filter: blur(3px);
+    background: rgba(0, 0, 0, 0.6);
 }
 
 .content {
@@ -140,22 +135,24 @@
 
 .progressFill {
     height: 100%;
+    width: 100%;
     background: white;
     border-radius: 2px;
+    transform-origin: left center;
     animation: progress 2s ease-in-out infinite;
 }
 
 @keyframes progress {
     0% {
-        width: 0;
+        transform: scaleX(0);
     }
 
     50% {
-        width: 70%;
+        transform: scaleX(0.7);
     }
 
     100% {
-        width: 100%;
+        transform: scaleX(1);
     }
 }
 
@@ -164,4 +161,14 @@
     color: rgba(255, 255, 255, 0.6);
     letter-spacing: 1px;
     margin-top: 8px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .logo,
+    .dot,
+    .progressFill,
+    .content {
+        animation: none;
+    }
 }

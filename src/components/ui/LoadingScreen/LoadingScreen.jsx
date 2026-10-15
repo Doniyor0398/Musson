@@ -1,4 +1,4 @@
-import restaurantBg from '../../../assets/restaurant.jpg';
+import restaurantBg from '../../../assets/restaurant.webp';
 import styles from './LoadingScreen.module.css';
 
 export function LoadingScreen({ text = 'Загрузка...' }) {

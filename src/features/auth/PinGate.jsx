@@ -30,30 +30,18 @@ export function PinGate({ children, section = 'kitchen', backTo = '/' }) {
 
     return (
         <div className={styles.screen}>
-            <Link to={backTo} className={styles.backTop}>
-                ← Назад
-            </Link>
-
+            <Link to={backTo} className={styles.backTop}>← Назад</Link>
             <div className={styles.card}>
                 <div className={styles.icon}>🔐</div>
                 <div className={styles.title}>Админ: {sectionLabel}</div>
                 <div className={styles.subtitle}>Введите PIN-код</div>
-
                 <div className={styles.display}>
                     {pin ? '•'.repeat(pin.length) : '••••'}
                 </div>
-
                 <NumPad asString value={pin} onChange={setPin} maxLength={4} />
-
                 <div className={styles.error}>{error}</div>
-
-                <button className={styles.okBtn} onClick={handleOk}>
-                    Войти
-                </button>
-
-                <Link to={backTo} className={styles.backBottom}>
-                    ← Назад
-                </Link>
+                <button className={styles.okBtn} onClick={handleOk}>Войти</button>
+                <Link to={backTo} className={styles.backBottom}>← Назад</Link>
             </div>
         </div>
     );
