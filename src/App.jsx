@@ -4,6 +4,7 @@ import { PinGate } from './features/auth/PinGate';
 import { ProtectedRoute } from './features/auth/ProtectedRoute';
 import { LoadingScreen } from './components/ui/LoadingScreen/LoadingScreen';
 const SessionDetailPage = lazy(() => import('./pages/SessionDetailPage'));
+const DefrostPage = lazy(() => import('./pages/DefrostPage'));
 
 const HomePage = lazy(() => import('./pages/HomePage'));
 const LoginPage = lazy(() => import('./pages/LoginPage'));
@@ -27,8 +28,8 @@ function App() {
         <Route path="/kitchen/products" element={<ProtectedRoute><ProductsPage /></ProtectedRoute>} />
         <Route path="/kitchen/cleaners" element={<ProtectedRoute><CleanersPage /></ProtectedRoute>} />
         <Route path="/kitchen/goods" element={<ProtectedRoute><GoodsPage /></ProtectedRoute>} />
+        <Route path="/kitchen/defrost" element={<ProtectedRoute><DefrostPage /></ProtectedRoute>} />
         <Route path="/kitchen/inventory" element={<ProtectedRoute><InventoryPage /></ProtectedRoute>} />
-
         <Route path="/kitchen/inventory/:zone" element={<ProtectedRoute><InventoryZonePage /></ProtectedRoute>} />
 
         <Route

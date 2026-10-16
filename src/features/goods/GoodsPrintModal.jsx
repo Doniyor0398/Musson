@@ -35,7 +35,7 @@ export function GoodsPrintModal({
     };
 
     const LabelContent = () => (
-        <div className="label-inner">
+        <div className="label-inner label-inner--big">
             <div className="label-header">
                 <h3>{company.name}</h3>
                 <p>Хозтовары</p>

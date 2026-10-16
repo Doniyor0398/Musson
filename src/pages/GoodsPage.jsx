@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 import { COMPANY_INFO } from '../data/company';
 import { PRESET_GOODS } from '../data/goods';
 import { GoodsPrintModal } from '../features/goods/GoodsPrintModal';
+import { PageLayout } from '../components/layout/PageLayout';
+import { Section } from '../components/layout/Section';
 import styles from './GoodsPage.module.css';
 
 export default function GoodsPage() {
@@ -20,19 +21,13 @@ export default function GoodsPage() {
     const canShow = finalName.trim() && receivedDate && responsible.trim();
 
     return (
-        <div className={styles.page}>
-            <div className={styles.topBar}>
-                <div className={styles.titleBlock}>
-                    <h1>Хозтовары</h1>
-                    <p>Маркировка хозяйственных товаров</p>
-                </div>
-                <Link to="/kitchen" className={styles.backBtn}>
-                    ← Назад
-                </Link>
-            </div>
-
-            <div className={styles.section}>
-                <div className={styles.sectionLabel}>Наименование</div>
+        <PageLayout
+            title="Хозтовары"
+            subtitle="Маркировка хозяйственных товаров"
+            backTo="/kitchen"
+            maxWidth={640}
+        >
+            <Section label="Наименование">
                 <div className={styles.buttons}>
                     {PRESET_GOODS.map(name => (
                         <button
@@ -65,7 +60,7 @@ export default function GoodsPage() {
                         autoFocus
                     />
                 )}
-            </div>
+            </Section>
 
             <div className={styles.row}>
                 <div className={styles.fieldGroup}>
@@ -120,6 +115,6 @@ export default function GoodsPage() {
                     onClose={() => setShowModal(false)}
                 />
             )}
-        </div>
+        </PageLayout>
     );
 }

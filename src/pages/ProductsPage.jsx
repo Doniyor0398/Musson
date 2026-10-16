@@ -13,6 +13,7 @@ import { PrintModal } from '../features/label-preview/PrintModal';
 import { LoadingScreen } from '../components/ui/LoadingScreen/LoadingScreen';
 import { toDateTimeLocal } from '../utils/date';
 import { Link } from 'react-router-dom';
+import { getShelfLife } from '../data/shelfLife';
 import styles from './ProductsPage.module.css';
 
 export default function ProductsPage() {
@@ -35,7 +36,7 @@ export default function ProductsPage() {
     const canNext = product && employee && storage;
 
     const handleNext = () => {
-        const initialDays = Math.max(1, Math.round((product.hours || 24) / 24));
+        const initialDays = getShelfLife(product.category);
         setDays(initialDays);
         setStep('hours');
     };
@@ -58,11 +59,24 @@ export default function ProductsPage() {
         <div className={styles.page}>
             <div className={styles.topBar}>
                 <div className={styles.titleBlock}>
-                    <h1>Продукты</h1>
+                    <h1>🏷️ Продукты</h1>
                     <p>Заготовки и полуфабрикаты</p>
                 </div>
                 <Link to="/kitchen" className={styles.backBtn}>
                     ← Назад
+                </Link>
+            </div>
+            <div className={styles.tabs}>
+                <Link to="/kitchen/defrost" className={styles.tab}>
+                    <span className={styles.tabTitle}>❄️ Разморозка</span>
+                    <span className={styles.tabSub}>DEFROST</span>
+                </Link>
+                <Link
+                    to="/kitchen/products"
+                    className={`${styles.tab} ${styles.tabActive}`}
+                >
+                    <span className={styles.tabTitle}>🏷️ Продукты</span>
+                    <span className={styles.tabSub}>PRODUCTS</span>
                 </Link>
             </div>
 

@@ -90,13 +90,40 @@ textarea {
 /* Внутренний контейнер: отвечает за симметрию и боковые поля */
 .label-inner {
     padding: 0 16px;
-    /* 16px ~ 4.5мм боковые рамки безопасности */
     display: flex;
     flex-direction: column;
     justify-content: center;
-    /* 🎯 Магия тут: собирает всё в кучу и центрирует вертикально */
     height: 100%;
     box-sizing: border-box;
+}
+
+/* Разморозка — увеличенные отступы.
+   Продукты используют .label-inner и остаются без изменений. */
+.label-inner--defrost .label-header {
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+}
+
+.label-inner--defrost .label-header h3 {
+    margin-bottom: 4px;
+}
+
+.label-inner--defrost .label-header p {
+    line-height: 1.3;
+    margin-top: 2px;
+}
+
+.label-inner--defrost .label-body {
+    gap: 6px;
+}
+
+.label-inner--defrost .label-info-block p {
+    margin: 3px 0;
+    line-height: 1.35;
+}
+
+.label-inner--defrost .label-footer {
+    padding-top: 8px;
 }
 
 /* Категория (ДЕЗИНФЕКЦИЯ / ХИМИЯ) */
@@ -115,19 +142,21 @@ textarea {
 
 /* Увеличенные шрифты — только для моющих и хозтоваров */
 .label-inner--big .label-header h3 {
-    font-size: 15px;
+    font-size: 17px !important;
 }
 
 .label-inner--big .label-header p {
-    font-size: 10px;
+    font-size: 12px !important;
 }
 
 .label-inner--big .label-product h4 {
-    font-size: 16px;
+    font-size: 19px !important;
+    line-height: 1.2 !important;
 }
 
 .label-inner--big .label-info-block p {
-    font-size: 12px;
+    font-size: 14px !important;
+    line-height: 1.4 !important;
 }
 
 /* Эмуляция принтера на экране */

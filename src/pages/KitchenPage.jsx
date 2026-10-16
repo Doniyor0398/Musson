@@ -11,6 +11,14 @@ const KITCHEN_LINKS = [
         variant: 'primary',
     },
     {
+        id: 'defrost',
+        icon: '❄️',
+        title: 'Разморозка',
+        subtitle: 'Маркировка размороженных продуктов',
+        to: '/kitchen/defrost',
+        variant: 'primary',
+    },
+    {
         id: 'cleaners',
         icon: '🧴',
         title: 'Моющие средства',

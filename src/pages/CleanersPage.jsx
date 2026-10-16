@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 import { COMPANY_INFO } from '../data/company';
 import { PRESET_CLEANERS } from '../data/cleaners';
 import { CleanerPrintModal } from '../features/cleaners/CleanerPrintModal';
+import { PageLayout } from '../components/layout/PageLayout';
+import { Section } from '../components/layout/Section';
 import { toDateTimeLocal, calculateExpiration } from '../utils/date';
 import styles from './CleanersPage.module.css';
 
@@ -21,7 +22,6 @@ export default function CleanersPage() {
 
     const isCustom = cleanerName === '__custom__';
     const finalName = isCustom ? customName : cleanerName;
-
     const canShow = finalName.trim() && concentration && days && prepDate;
 
     const expirationDate = (() => {
@@ -30,19 +30,13 @@ export default function CleanersPage() {
     })();
 
     return (
-        <div className={styles.page}>
-            <div className={styles.topBar}>
-                <div className={styles.titleBlock}>
-                    <h1>Моющие средства</h1>
-                    <p>Маркировка емкостей с рабочими растворами</p>
-                </div>
-                <Link to="/kitchen" className={styles.backBtn}>
-                    ← Назад
-                </Link>
-            </div>
-
-            <div className={styles.section}>
-                <div className={styles.sectionLabel}>Средство</div>
+        <PageLayout
+            title="Моющие средства"
+            subtitle="Маркировка емкостей с рабочими растворами"
+            backTo="/kitchen"
+            maxWidth={640}
+        >
+            <Section label="Средство">
                 <div className={styles.cleanerButtons}>
                     {PRESET_CLEANERS.map(name => (
                         <button
@@ -75,7 +69,7 @@ export default function CleanersPage() {
                         autoFocus
                     />
                 )}
-            </div>
+            </Section>
 
             <div className={styles.row}>
                 <div className={styles.fieldGroup}>
@@ -169,6 +163,6 @@ export default function CleanersPage() {
                     onClose={() => setShowModal(false)}
                 />
             )}
-        </div>
+        </PageLayout>
     );
 }
