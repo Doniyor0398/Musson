@@ -3,11 +3,14 @@ import { Link, useParams } from 'react-router-dom';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import { getZoneById } from '../data/zones';
+import { useEmployees } from '../hooks/useEmployees';
 import {
     fetchProductsByZone,
-    getOrCreateSession,
-    saveProductStock,
+    ensureSession,
+    saveItem,
     completeSession,
+    getActiveSession,
+    fetchSessionItems,
 } from '../firebase/inventory';
 import { LoadingScreen } from '../components/ui/LoadingScreen/LoadingScreen';
 import styles from './InventoryZonePage.module.css';
@@ -17,15 +20,15 @@ export default function InventoryZonePage() {
     const zoneData = getZoneById(zone);
 
     const [type, setType] = useState('product');
-    const [unitMode, setUnitMode] = useState('кг'); // 'кг' | 'г'
+    const [unitMode, setUnitMode] = useState('кг');
     const [lists, setLists] = useState({ product: [], semi: [] });
     const [loading, setLoading] = useState(true);
-    const [sessionId, setSessionId] = useState(null);
     const [query, setQuery] = useState('');
     const [showOnlyFilled, setShowOnlyFilled] = useState(false);
     const [showOnlyEmpty, setShowOnlyEmpty] = useState(false);
     const [addModalOpen, setAddModalOpen] = useState(false);
     const [addMoreProduct, setAddMoreProduct] = useState(null);
+    const [sessionIds, setSessionIds] = useState({ product: null, semi: null });
 
     useEffect(() => {
         let mounted = true;
@@ -36,12 +39,33 @@ export default function InventoryZonePage() {
                     fetchProductsByZone('product', zone),
                     fetchProductsByZone('semi', zone),
                 ]);
-                if (!mounted) return;
-                setLists({ product: prods, semi: semis });
 
-                const sid = await getOrCreateSession('product', zone);
+                const [sidP, sidS] = await Promise.all([
+                    getActiveSession(zone, 'product'),
+                    getActiveSession(zone, 'semi'),
+                ]);
+
+                const [itemsP, itemsS] = await Promise.all([
+                    sidP ? fetchSessionItems(sidP) : Promise.resolve([]),
+                    sidS ? fetchSessionItems(sidS) : Promise.resolve([]),
+                ]);
+
+                const applyItems = (arr, items) => {
+                    const map = new Map(items.map(it => [it.id, it.value]));
+                    return arr.map(p => ({
+                        ...p,
+                        currentStock: map.has(p.id)
+                            ? map.get(p.id)
+                            : (p.lastActual || 0),
+                    }));
+                };
+
                 if (!mounted) return;
-                setSessionId(sid);
+                setLists({
+                    product: applyItems(prods, itemsP),
+                    semi: applyItems(semis, itemsS),
+                });
+                setSessionIds({ product: sidP, semi: sidS });
             } catch (err) {
                 console.error(err);
                 alert('Ошибка загрузки: ' + err.message);
@@ -56,7 +80,7 @@ export default function InventoryZonePage() {
     const products = lists[type] || [];
 
     const filledCount = useMemo(
-        () => products.filter(p => p.currentStock > 0).length,
+        () => products.filter(p => (p.currentStock || 0) > 0).length,
         [products]
     );
     const totalCount = products.length;
@@ -64,8 +88,8 @@ export default function InventoryZonePage() {
 
     const filtered = useMemo(() => {
         let list = products;
-        if (showOnlyFilled) list = list.filter(p => p.currentStock > 0);
-        if (showOnlyEmpty) list = list.filter(p => !p.currentStock);
+        if (showOnlyFilled) list = list.filter(p => (p.currentStock || 0) > 0);
+        if (showOnlyEmpty) list = list.filter(p => (p.currentStock || 0) === 0);
         const q = query.trim().toLowerCase();
         if (q) {
             list = list.filter(
@@ -86,19 +110,42 @@ export default function InventoryZonePage() {
         return Array.from(map.entries());
     }, [filtered]);
 
-    const updateStock = (id, value) => {
+    const updateStock = async (id, value) => {
         setLists(prev => ({
             ...prev,
             [type]: prev[type].map(p => (p.id === id ? { ...p, currentStock: value } : p)),
         }));
-        saveProductStock(id, value).catch(err => console.error(err));
+
+        try {
+            let sid = sessionIds[type];
+            if (!sid) {
+                const responsible = sessionStorage.getItem('inventory.responsible') || null;
+                sid = await ensureSession(zone, type, responsible);
+                setSessionIds(prev => ({ ...prev, [type]: sid }));
+            }
+
+            const product = lists[type].find(p => p.id === id);
+            await saveItem(sid, id, value, {
+                name: product?.name,
+                code: product?.code,
+                unit: product?.unit,
+                category: product?.category,
+            });
+        } catch (err) {
+            console.error('Ошибка сохранения:', err);
+        }
     };
 
     const handleFinish = async () => {
-        if (!sessionId) return;
+        const sid = sessionIds[type];
+        if (!sid) {
+            alert('Ничего не введено — нечего завершать');
+            return;
+        }
         if (!confirm(`Завершить? Заполнено ${filledCount} из ${totalCount}.`)) return;
         try {
-            await completeSession(sessionId);
+            await completeSession(sid);
+            setSessionIds(prev => ({ ...prev, [type]: null }));
             alert('Инвентаризация завершена!');
         } catch (err) {
             alert('Ошибка: ' + err.message);
@@ -114,7 +161,8 @@ export default function InventoryZonePage() {
                 type,
                 zone,
                 category: data.category || 'Прочее',
-                currentStock: data.currentStock || 0,
+                currentStock: 0,
+                lastActual: 0,
                 isActive: true,
                 createdAt: serverTimestamp(),
             };
@@ -136,21 +184,69 @@ export default function InventoryZonePage() {
         setAddMoreProduct(null);
     };
 
-    if (loading) return <LoadingScreen text="Загружаем продукты..." />;
+    const [responsible, setResponsible] = useState(
+        () => sessionStorage.getItem('inventory.responsible') || ''
+    );
+
+    useEffect(() => {
+        if (responsible) {
+            sessionStorage.setItem('inventory.responsible', responsible);
+        }
+    }, [responsible]);
+
+    // Загружаем сотрудников для выбора
+    const { employees, loading: loadingEmp } = useEmployees();
+
+    if (loading || loadingEmp) return <LoadingScreen text="Загрузка..." />;
+
+    // ===== Шаг 1: выбор повара =====
+    if (!responsible) {
+        return (
+            <div className={styles.page}>
+                <div className={styles.topBar}>
+                    <div className={styles.titleBlock}>
+                        <h1>{zoneData.icon} {zoneData.name}</h1>
+                        <p>Кто считает?</p>
+                    </div>
+                    <Link to="/kitchen/inventory" className={styles.backBtn}>
+                        ← Назад
+                    </Link>
+                </div>
+
+                {employees.length === 0 ? (
+                    <div className={styles.empty}>
+                        <p>Нет сотрудников. Добавь их в админке.</p>
+                    </div>
+                ) : (
+                    <div className={styles.employeeGrid}>
+                        {employees.map(e => (
+                            <button
+                                key={e.id}
+                                type="button"
+                                className={styles.employeeBtn}
+                                onClick={() => setResponsible(e.name)}
+                            >
+                                {e.name}
+                            </button>
+                        ))}
+                    </div>
+                )}
+            </div>
+        );
+    }
 
     return (
         <div className={styles.page}>
             <div className={styles.topBar}>
                 <div className={styles.titleBlock}>
                     <h1>{zoneData.icon} {zoneData.name}</h1>
-                    <p>Заполнено {filledCount} из {totalCount}</p>
+                    <p>Повар: <strong>{responsible}</strong> · Заполнено {filledCount} из {totalCount}</p>
                 </div>
                 <Link to="/kitchen/inventory" className={styles.backBtn}>
                     ← Назад
                 </Link>
             </div>
 
-            {/* Переключатель Товары / ПФ */}
             <div className={styles.typeSwitch}>
                 <button
                     type="button"
@@ -168,13 +264,11 @@ export default function InventoryZonePage() {
                 </button>
             </div>
 
-            {/* Прогресс */}
             <div className={styles.progressBar}>
                 <div className={styles.progressFill} style={{ width: `${progress}%` }} />
             </div>
             <div className={styles.progressText}>{progress}%</div>
 
-            {/* Глобальный переключатель единиц */}
             <div className={styles.globalUnitSwitch}>
                 <button
                     type="button"
@@ -192,7 +286,6 @@ export default function InventoryZonePage() {
                 </button>
             </div>
 
-            {/* Поиск + Добавить */}
             <div className={styles.searchRow}>
                 <input
                     className={styles.search}
@@ -211,7 +304,6 @@ export default function InventoryZonePage() {
                 </button>
             </div>
 
-            {/* Фильтры */}
             <div className={styles.filters}>
                 <button
                     type="button"
@@ -235,7 +327,6 @@ export default function InventoryZonePage() {
                 </button>
             </div>
 
-            {/* Список */}
             <div className={styles.list}>
                 {grouped.length === 0 && (
                     <div className={styles.empty}>
@@ -298,7 +389,6 @@ function InventoryRow({ product, unitMode, onChange, onAddMore }) {
     const isPiece = product.unit === 'шт';
     const currentKg = Number(product.currentStock) || 0;
 
-    // Локальное значение в текущем режиме (г или кг)
     const [localValue, setLocalValue] = useState(() => {
         if (!currentKg) return '';
         if (isPiece) return String(currentKg);
@@ -307,10 +397,9 @@ function InventoryRow({ product, unitMode, onChange, onAddMore }) {
             : String(currentKg);
     });
 
-    const timerRef = useRef(null);
     const prevModeRef = useRef(unitMode);
+    const lastSavedRef = useRef(localValue);
 
-    // При смене глобального режима — пересчитать отображение
     useEffect(() => {
         if (prevModeRef.current === unitMode) return;
         prevModeRef.current = unitMode;
@@ -335,12 +424,17 @@ function InventoryRow({ product, unitMode, onChange, onAddMore }) {
     const handleChange = (raw) => {
         const cleaned = raw.replace(/[^\d.,]/g, '').replace(',', '.');
         setLocalValue(cleaned);
+    };
 
-        if (timerRef.current) clearTimeout(timerRef.current);
-        timerRef.current = setTimeout(() => {
-            const num = parseFloat(cleaned) || 0;
-            onChange(product.id, toStorage(num));
-        }, 500);
+    const handleBlur = () => {
+        if (localValue === lastSavedRef.current) return;
+        const num = parseFloat(localValue) || 0;
+        onChange(product.id, toStorage(num));
+        lastSavedRef.current = localValue;
+    };
+
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') e.target.blur();
     };
 
     const isFilled = localValue !== '';
@@ -378,6 +472,8 @@ function InventoryRow({ product, unitMode, onChange, onAddMore }) {
                         inputMode="decimal"
                         value={localValue}
                         onChange={e => handleChange(e.target.value)}
+                        onBlur={handleBlur}
+                        onKeyDown={handleKeyDown}
                         placeholder="0"
                         className={styles.input}
                     />
@@ -479,8 +575,6 @@ function AddProductModal({ type, unitMode, existingCategories, onSave, onClose }
     const [stockValue, setStockValue] = useState('');
 
     const isPiece = unit === 'шт';
-
-    // Какую единицу показывать для массы
     const massUnit = isPiece ? 'шт' : unitMode;
 
     const handleSubmit = () => {
@@ -489,7 +583,6 @@ function AddProductModal({ type, unitMode, existingCategories, onSave, onClose }
             return;
         }
 
-        // Переводим остаток в основную единицу (кг/шт/л)
         let currentStock = 0;
         if (stockValue) {
             const num = parseFloat(stockValue.replace(',', '.')) || 0;

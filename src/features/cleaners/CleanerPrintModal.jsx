@@ -1,22 +1,16 @@
 import { useEffect, useState } from 'react';
+import { formatDate } from '../../utils/date';
 import styles from './CleanerPrintModal.module.css';
-
-const pad = n => String(n).padStart(2, '0');
-
-const formatShortDate = date => {
-    if (!date) return '—';
-    const d = pad(date.getDate());
-    const m = pad(date.getMonth() + 1);
-    const y = String(date.getFullYear()).slice(-2);
-    return `${d}.${m}.${y}`;
-};
 
 export function CleanerPrintModal({
     company,
+    category,
     name,
     concentration,
+    purpose,
     prepDate,
     expirationDate,
+    responsible,
     onClose,
 }) {
     const [quantity, setQuantity] = useState(1);
@@ -35,24 +29,34 @@ export function CleanerPrintModal({
     };
 
     const LabelContent = () => (
-        <>
+        <div className="label-inner label-inner--big">
             <div className="label-header">
-                <h3>{company.name}</h3>
-                <p>Рабочий раствор</p>
+                <h3>[ {company.name} ]</h3>
+                <p>{company.legalName}</p>
             </div>
 
-            <div className="label-product">
-                <h4>{name}</h4>
+            <div className="label-body">
+                <div className="label-category">{category}</div>
+                <div className="label-product">
+                    <h4>{name}</h4>
+                </div>
+                <div className="label-info-block">
+                    <p><strong>Концентрация:</strong> {concentration}</p>
+                    <p><strong>Назначение:</strong> {purpose || '—'}</p>
+                </div>
+                <div className="label-info-block">
+                    <p><strong>Вскрыто/Приг:</strong> {prepDate ? formatDate(prepDate) : '—'}</p>
+                    <p><strong>Годен до:</strong> {expirationDate ? formatDate(expirationDate) : '—'}</p>
+                </div>
             </div>
 
-            <div className="label-shelf">
-                <p>
-                    <strong>Концентрация:</strong> {concentration}%
-                </p>
-                <p>Дата приготовления: {formatShortDate(prepDate)}</p>
-                <p>Срок годности до: {formatShortDate(expirationDate)}</p>
+            <div className="label-footer">
+                <div className="label-executor">
+                    <p className="label-footer-title">Ответственный:</p>
+                    <p className="label-footer-name">{responsible}</p>
+                </div>
             </div>
-        </>
+        </div>
     );
 
     return (
@@ -67,7 +71,6 @@ export function CleanerPrintModal({
 
                 <div className={styles.printerSlot} />
 
-                {/* Предпросмотр */}
                 <div className={styles.labelContainer}>
                     <div className="label-roll-wrap">
                         <div className="print-label">
@@ -76,7 +79,6 @@ export function CleanerPrintModal({
                     </div>
                 </div>
 
-                {/* Печать N копий */}
                 <div className="print-only-container">
                     {Array.from({ length: quantity }).map((_, i) => (
                         <div key={i} className="print-label">
@@ -85,7 +87,6 @@ export function CleanerPrintModal({
                     ))}
                 </div>
 
-                {/* Счётчик копий */}
                 <div className={styles.quantityRow}>
                     <button
                         type="button"

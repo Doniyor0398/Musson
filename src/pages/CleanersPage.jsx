@@ -3,26 +3,30 @@ import { Link } from 'react-router-dom';
 import { COMPANY_INFO } from '../data/company';
 import { PRESET_CLEANERS } from '../data/cleaners';
 import { CleanerPrintModal } from '../features/cleaners/CleanerPrintModal';
+import { toDateTimeLocal, calculateExpiration } from '../utils/date';
 import styles from './CleanersPage.module.css';
+
+const RESPONSIBLES = ['Марина Игоревна'];
 
 export default function CleanersPage() {
     const [cleanerName, setCleanerName] = useState(PRESET_CLEANERS[0]);
     const [customName, setCustomName] = useState('');
-    const [concentration, setConcentration] = useState('0,3');
+    const [category, setCategory] = useState('ДЕЗИНФЕКЦИЯ / ХИМИЯ');
+    const [concentration, setConcentration] = useState('0,3%');
+    const [purpose, setPurpose] = useState('');
     const [days, setDays] = useState('5');
-    const [prepDate, setPrepDate] = useState(() => new Date().toISOString().slice(0, 10));
+    const [prepDate, setPrepDate] = useState(() => toDateTimeLocal(new Date()));
+    const [responsible, setResponsible] = useState(RESPONSIBLES[0]);
     const [showModal, setShowModal] = useState(false);
 
     const isCustom = cleanerName === '__custom__';
     const finalName = isCustom ? customName : cleanerName;
 
-    const canShow = finalName.trim() && concentration && days;
+    const canShow = finalName.trim() && concentration && days && prepDate;
 
     const expirationDate = (() => {
         if (!prepDate || !days) return null;
-        const d = new Date(prepDate);
-        d.setDate(d.getDate() + Number(days));
-        return d;
+        return calculateExpiration(new Date(prepDate), Number(days) * 24);
     })();
 
     return (
@@ -75,13 +79,36 @@ export default function CleanersPage() {
 
             <div className={styles.row}>
                 <div className={styles.fieldGroup}>
-                    <label className={styles.label}>Концентрация, %</label>
+                    <label className={styles.label}>Категория</label>
+                    <input
+                        className={styles.input}
+                        type="text"
+                        value={category}
+                        onChange={e => setCategory(e.target.value)}
+                        placeholder="ДЕЗИНФЕКЦИЯ / ХИМИЯ"
+                    />
+                </div>
+                <div className={styles.fieldGroup}>
+                    <label className={styles.label}>Назначение</label>
+                    <input
+                        className={styles.input}
+                        type="text"
+                        value={purpose}
+                        onChange={e => setPurpose(e.target.value)}
+                        placeholder="Гигиена рук"
+                    />
+                </div>
+            </div>
+
+            <div className={styles.row}>
+                <div className={styles.fieldGroup}>
+                    <label className={styles.label}>Концентрация</label>
                     <input
                         className={styles.input}
                         type="text"
                         value={concentration}
                         onChange={e => setConcentration(e.target.value)}
-                        placeholder="0,3"
+                        placeholder="0,3% или Готовый раствор"
                     />
                 </div>
                 <div className={styles.fieldGroup}>
@@ -97,13 +124,26 @@ export default function CleanersPage() {
             </div>
 
             <div className={styles.fieldGroup}>
-                <label className={styles.label}>Дата приготовления</label>
+                <label className={styles.label}>Вскрыто / Приготовлено</label>
                 <input
                     className={styles.input}
-                    type="date"
+                    type="datetime-local"
                     value={prepDate}
                     onChange={e => setPrepDate(e.target.value)}
                 />
+            </div>
+
+            <div className={styles.fieldGroup}>
+                <label className={styles.label}>Ответственный</label>
+                <select
+                    className={styles.input}
+                    value={responsible}
+                    onChange={e => setResponsible(e.target.value)}
+                >
+                    {RESPONSIBLES.map(name => (
+                        <option key={name} value={name}>{name}</option>
+                    ))}
+                </select>
             </div>
 
             <div className={styles.actions}>
@@ -119,10 +159,13 @@ export default function CleanersPage() {
             {showModal && (
                 <CleanerPrintModal
                     company={COMPANY_INFO}
+                    category={category}
                     name={finalName}
                     concentration={concentration}
+                    purpose={purpose}
                     prepDate={new Date(prepDate)}
                     expirationDate={expirationDate}
+                    responsible={responsible}
                     onClose={() => setShowModal(false)}
                 />
             )}

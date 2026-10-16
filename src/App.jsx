@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import { PinGate } from './features/auth/PinGate';
 import { ProtectedRoute } from './features/auth/ProtectedRoute';
 import { LoadingScreen } from './components/ui/LoadingScreen/LoadingScreen';
+const SessionDetailPage = lazy(() => import('./pages/SessionDetailPage'));
 
 const HomePage = lazy(() => import('./pages/HomePage'));
 const LoginPage = lazy(() => import('./pages/LoginPage'));
@@ -12,7 +13,7 @@ const CleanersPage = lazy(() => import('./pages/CleanersPage'));
 const GoodsPage = lazy(() => import('./pages/GoodsPage'));
 const InventoryPage = lazy(() => import('./pages/InventoryPage'));
 const InventoryZonePage = lazy(() => import('./pages/InventoryZonePage'));
-const InventoryHistoryPage = lazy(() => import('./pages/InventoryHistoryPage'));
+
 const AdminPage = lazy(() => import('./pages/AdminPage'));
 
 function App() {
@@ -27,7 +28,7 @@ function App() {
         <Route path="/kitchen/cleaners" element={<ProtectedRoute><CleanersPage /></ProtectedRoute>} />
         <Route path="/kitchen/goods" element={<ProtectedRoute><GoodsPage /></ProtectedRoute>} />
         <Route path="/kitchen/inventory" element={<ProtectedRoute><InventoryPage /></ProtectedRoute>} />
-        <Route path="/kitchen/inventory/history" element={<ProtectedRoute><InventoryHistoryPage /></ProtectedRoute>} />
+
         <Route path="/kitchen/inventory/:zone" element={<ProtectedRoute><InventoryZonePage /></ProtectedRoute>} />
 
         <Route
@@ -36,6 +37,16 @@ function App() {
             <ProtectedRoute>
               <PinGate section="kitchen" backTo="/kitchen">
                 <AdminPage />
+              </PinGate>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/kitchen/admin/report/:sessionId"
+          element={
+            <ProtectedRoute>
+              <PinGate section="kitchen" backTo="/kitchen">
+                <SessionDetailPage />
               </PinGate>
             </ProtectedRoute>
           }

@@ -6,8 +6,6 @@
     background: var(--color-bg);
 }
 
-
-
 .topBar {
     display: flex;
     justify-content: space-between;
@@ -513,7 +511,7 @@
         letter-spacing: 0;
     }
 
-
+    /* Скрываем колонки «Срок» и «Порция» только у продуктов */
     .hideMobile {
         display: none;
     }
@@ -559,8 +557,4 @@
     .formRow {
         grid-template-columns: 1fr;
     }
-}
-
-.hideMobile {
-    display: none;
 }

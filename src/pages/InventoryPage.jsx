@@ -10,14 +10,9 @@ export default function InventoryPage() {
                     <h1>Инвентаризация</h1>
                     <p>Выбери зону</p>
                 </div>
-                <div className={styles.topActions}>
-                    <Link to="/kitchen/inventory/history" className={styles.historyBtn}>
-                        📋 История
-                    </Link>
-                    <Link to="/kitchen" className={styles.backBtn}>
-                        ← Назад
-                    </Link>
-                </div>
+                <Link to="/kitchen" className={styles.backBtn}>
+                    ← Назад
+                </Link>
             </div>
 
             <div className={styles.grid}>

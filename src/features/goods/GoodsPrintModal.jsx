@@ -35,26 +35,23 @@ export function GoodsPrintModal({
     };
 
     const LabelContent = () => (
-        <>
+        <div className="label-inner">
             <div className="label-header">
                 <h3>{company.name}</h3>
                 <p>Хозтовары</p>
             </div>
 
-            <div className="label-product">
-                <h4>{name}</h4>
+            <div className="label-body">
+                <div className="label-product">
+                    <h4>{name}</h4>
+                </div>
+                <div className="label-info-block">
+                    <p><strong>Количество:</strong> {quantity}</p>
+                    <p>Дата получения: {formatShortDate(receivedDate)}</p>
+                    <p><strong>Ответственный:</strong> {responsible}</p>
+                </div>
             </div>
-
-            <div className="label-shelf">
-                <p>
-                    <strong>Количество:</strong> {quantity}
-                </p>
-                <p>Дата получения: {formatShortDate(receivedDate)}</p>
-                <p>
-                    <strong>Ответственный:</strong> {responsible}
-                </p>
-            </div>
-        </>
+        </div>
     );
 
     return (

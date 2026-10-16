@@ -50,8 +50,16 @@ h4 {
     letter-spacing: -0.02em;
 }
 
-button {
+button,
+a,
+input,
+select,
+textarea {
     font-family: var(--font-body);
+    touch-action: manipulation;
+}
+
+button {
     cursor: pointer;
 }
 
@@ -89,6 +97,37 @@ textarea {
     /* 🎯 Магия тут: собирает всё в кучу и центрирует вертикально */
     height: 100%;
     box-sizing: border-box;
+}
+
+/* Категория (ДЕЗИНФЕКЦИЯ / ХИМИЯ) */
+.label-category {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+}
+
+.label-inner--big .label-category {
+    font-size: 12px;
+}
+
+
+/* Увеличенные шрифты — только для моющих и хозтоваров */
+.label-inner--big .label-header h3 {
+    font-size: 15px;
+}
+
+.label-inner--big .label-header p {
+    font-size: 10px;
+}
+
+.label-inner--big .label-product h4 {
+    font-size: 16px;
+}
+
+.label-inner--big .label-info-block p {
+    font-size: 12px;
 }
 
 /* Эмуляция принтера на экране */
@@ -259,5 +298,69 @@ textarea {
     @page {
         size: 58mm 60mm;
         margin: 0 !important;
+    }
+}
+
+/* ============================================
+   ПЕЧАТЬ A4 (детали сессии)
+   ============================================ */
+
+/* На экране A4-версия скрыта */
+.print-a4-only {
+    display: none;
+}
+
+/* При печати A4: скрываем обычную, показываем A4 */
+@media print {
+    body.print-a4 #root {
+        display: none !important;
+    }
+
+    body.print-a4 .print-a4-only {
+        display: block !important;
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 210mm !important;
+        padding: 15mm !important;
+        background: white !important;
+        color: black !important;
+        font-family: Arial, sans-serif !important;
+    }
+
+    body.print-a4 .print-a4-only h1 {
+        font-size: 22px;
+        text-align: center;
+        margin-bottom: 6px;
+    }
+
+    body.print-a4 .print-a4-only p {
+        text-align: center;
+        font-size: 12px;
+        margin-bottom: 4px;
+    }
+
+    body.print-a4 .print-a4-only table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 16px;
+        font-size: 11px;
+    }
+
+    body.print-a4 .print-a4-only th,
+    body.print-a4 .print-a4-only td {
+        border: 1px solid #000;
+        padding: 5px 8px;
+        text-align: left;
+    }
+
+    body.print-a4 .print-a4-only th {
+        background: #f0f0f0;
+        font-weight: bold;
+    }
+
+    @page {
+        size: A4 portrait;
+        margin: 10mm;
     }
 }

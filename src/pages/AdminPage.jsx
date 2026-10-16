@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { collection, getDocs, addDoc, updateDoc, doc } from 'firebase/firestore';
 import { db } from '../firebase/config';
+import { ReportsTab } from './ReportsTab';
 import styles from './AdminPage.module.css';
 
 export default function AdminPage() {
@@ -10,9 +11,8 @@ export default function AdminPage() {
     const [employees, setEmployees] = useState([]);
     const [loading, setLoading] = useState(true);
     const [query, setQuery] = useState('');
-    const [modal, setModal] = useState(null); // null | {type, item}
+    const [modal, setModal] = useState(null);
 
-    // ===== ЗАГРУЗКА ДАННЫХ =====
     useEffect(() => {
         async function load() {
             setLoading(true);
@@ -41,7 +41,6 @@ export default function AdminPage() {
         load();
     }, []);
 
-    // ===== ФИЛЬТРАЦИЯ =====
     const filteredProducts = useMemo(() => {
         const q = query.trim().toLowerCase();
         if (!q) return products;
@@ -54,7 +53,6 @@ export default function AdminPage() {
         return employees.filter(e => e.name.toLowerCase().includes(q));
     }, [employees, query]);
 
-    // ===== CRUD =====
     const handleSave = async (data) => {
         const collectionName = modal.type.startsWith('product') ? 'products' : 'employees';
         try {
@@ -105,7 +103,6 @@ export default function AdminPage() {
         }
     };
 
-    // ===== АДМИНКА =====
     return (
         <div className={styles.page}>
             <div className={styles.topBar}>
@@ -121,47 +118,51 @@ export default function AdminPage() {
             <div className={styles.tabs}>
                 <button
                     className={`${styles.tab} ${tab === 'products' ? styles.tabActive : ''}`}
-                    onClick={() => {
-                        setTab('products');
-                        setQuery('');
-                    }}
+                    onClick={() => { setTab('products'); setQuery(''); }}
                 >
                     📦 Продукты ({products.length})
                 </button>
                 <button
                     className={`${styles.tab} ${tab === 'employees' ? styles.tabActive : ''}`}
-                    onClick={() => {
-                        setTab('employees');
-                        setQuery('');
-                    }}
+                    onClick={() => { setTab('employees'); setQuery(''); }}
                 >
                     👥 Сотрудники ({employees.length})
+                </button>
+                <button
+                    className={`${styles.tab} ${tab === 'reports' ? styles.tabActive : ''}`}
+                    onClick={() => { setTab('reports'); setQuery(''); }}
+                >
+                    📊 Отчёты
                 </button>
             </div>
 
             <div className={styles.section}>
-                <div className={styles.sectionHeader}>
-                    <input
-                        className={styles.search}
-                        type="search"
-                        placeholder="🔍 Поиск..."
-                        value={query}
-                        onChange={e => setQuery(e.target.value)}
-                    />
-                    <button
-                        className={styles.addBtn}
-                        onClick={() =>
-                            setModal({
-                                type: tab === 'products' ? 'product-new' : 'employee-new',
-                                item: null,
-                            })
-                        }
-                    >
-                        + Добавить
-                    </button>
-                </div>
+                {tab !== 'reports' && (
+                    <div className={styles.sectionHeader}>
+                        <input
+                            className={styles.search}
+                            type="search"
+                            placeholder="🔍 Поиск..."
+                            value={query}
+                            onChange={e => setQuery(e.target.value)}
+                        />
+                        <button
+                            className={styles.addBtn}
+                            onClick={() =>
+                                setModal({
+                                    type: tab === 'products' ? 'product-new' : 'employee-new',
+                                    item: null,
+                                })
+                            }
+                        >
+                            + Добавить
+                        </button>
+                    </div>
+                )}
 
-                {loading ? (
+                {tab === 'reports' ? (
+                    <ReportsTab />
+                ) : loading ? (
                     <div className={styles.empty}>Загрузка...</div>
                 ) : tab === 'products' ? (
                     filteredProducts.length === 0 ? (
@@ -171,8 +172,8 @@ export default function AdminPage() {
                             <thead>
                                 <tr>
                                     <th>Название</th>
-                                    <th>Срок (ч)</th>
-                                    <th>Порция (г)</th>
+                                    <th className={styles.hideMobile}>Срок (ч)</th>
+                                    <th className={styles.hideMobile}>Порция (г)</th>
                                     <th style={{ width: 100 }}></th>
                                 </tr>
                             </thead>
@@ -180,8 +181,8 @@ export default function AdminPage() {
                                 {filteredProducts.map(p => (
                                     <tr key={p.id}>
                                         <td>{p.name}</td>
-                                        <td>{p.hours}</td>
-                                        <td>{p.portion}</td>
+                                        <td className={styles.hideMobile}>{p.hours}</td>
+                                        <td className={styles.hideMobile}>{p.portion}</td>
                                         <td>
                                             <div className={styles.actionsCell}>
                                                 <button
@@ -259,7 +260,6 @@ export default function AdminPage() {
     );
 }
 
-// ===== МОДАЛКА РЕДАКТИРОВАНИЯ =====
 function ModalEdit({ modal, onSave, onClose }) {
     const isProduct = modal.type.startsWith('product');
     const item = modal.item;
