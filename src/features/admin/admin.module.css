@@ -1,119 +1,3 @@
-.page {
-    width: 100%;
-    min-height: 100vh;
-    padding: 24px 32px 40px;
-    box-sizing: border-box;
-    background: var(--color-bg);
-}
-
-.topBar {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 16px;
-    margin-bottom: 24px;
-}
-
-.titleBlock h1 {
-    font-family: var(--font-heading);
-    font-size: 26px;
-    font-weight: 700;
-    color: var(--color-primary);
-    letter-spacing: 1px;
-    line-height: 1.15;
-}
-
-.titleBlock p {
-    color: var(--color-muted);
-    font-size: 14px;
-    margin-top: 4px;
-}
-
-.backBtn {
-    padding: 12px 24px;
-    border: none;
-    border-radius: var(--radius-md);
-    background: black;
-    color: white;
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background 0.2s, transform 0.1s;
-    box-shadow: 0 2px 8px rgba(34, 197, 94, 0.25);
-    text-decoration: none;
-}
-
-.backBtn:hover {
-    background: var(--color-accent)
-}
-
-.backBtn:active {
-    transform: scale(0.97);
-}
-
-/* ===== PIN-ЭКРАН ===== */
-.pinScreen {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 80vh;
-}
-
-.pinCard {
-    background: var(--color-card);
-    border-radius: var(--radius-lg);
-    padding: 36px 32px;
-    width: 100%;
-    max-width: 380px;
-    box-shadow: var(--shadow-lg);
-    text-align: center;
-    border: 1px solid var(--color-border);
-}
-
-.pinIcon {
-    font-size: 48px;
-    margin-bottom: 12px;
-}
-
-.pinTitle {
-    font-family: var(--font-heading);
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--color-primary);
-    margin-bottom: 6px;
-}
-
-.pinSubtitle {
-    font-size: 14px;
-    color: var(--color-muted);
-    margin-bottom: 24px;
-}
-
-.pinDisplay {
-    font-family: var(--font-heading);
-    font-size: 32px;
-    font-weight: 700;
-    letter-spacing: 16px;
-    padding: 18px;
-    border: 2px solid var(--color-primary);
-    border-radius: var(--radius-md);
-    background: #f0fdf4;
-    margin-bottom: 20px;
-    min-height: 72px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--color-primary);
-}
-
-.pinError {
-    color: #ef4444;
-    font-size: 13px;
-    margin-top: 12px;
-    min-height: 18px;
-    font-weight: 600;
-}
-
 /* ===== ТАБЫ ===== */
 .tabs {
     display: flex;
@@ -148,19 +32,10 @@
 .tabActive {
     background: var(--color-accent);
     color: white;
-    border-color: var(--color-accent);
-    box-shadow: 0 2px 8px rgba(34, 197, 94, 0.25);
+    box-shadow: 0 2px 8px rgba(255, 130, 52, 0.25);
 }
 
 /* ===== СЕКЦИЯ ===== */
-.section {
-    background: var(--color-card);
-    border-radius: var(--radius-lg);
-    padding: 20px 24px;
-    box-shadow: var(--shadow-sm);
-    border: 1px solid var(--color-border);
-}
-
 .sectionHeader {
     display: flex;
     justify-content: space-between;
@@ -185,7 +60,7 @@
 .search:focus {
     outline: none;
     border-color: var(--color-primary);
-    box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.1);
+    box-shadow: 0 0 0 4px rgba(163, 191, 111, 0.15);
 }
 
 .addBtn {
@@ -199,7 +74,8 @@
     cursor: pointer;
     transition: background 0.2s, transform 0.1s;
     white-space: nowrap;
-    box-shadow: 0 2px 8px rgba(34, 197, 94, 0.25);
+    box-shadow: var(--shadow-sm);
+    font-family: inherit;
 }
 
 .addBtn:hover {
@@ -365,6 +241,7 @@
     color: var(--color-text);
     font-family: inherit;
     transition: border-color 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
 }
 
 .formGroup input:focus,
@@ -372,7 +249,7 @@
 .formGroup select:focus {
     outline: none;
     border-color: var(--color-primary);
-    box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.1);
+    box-shadow: 0 0 0 4px rgba(163, 191, 111, 0.15);
 }
 
 .formGroup textarea {
@@ -401,6 +278,7 @@
     font-weight: 700;
     cursor: pointer;
     transition: background 0.2s, transform 0.1s;
+    font-family: inherit;
 }
 
 .modalBtn:active {
@@ -410,7 +288,6 @@
 .modalBtnPrimary {
     background: var(--color-primary);
     color: white;
-    box-shadow: 0 2px 8px rgba(34, 197, 94, 0.25);
     padding: 15px;
 }
 
@@ -426,39 +303,11 @@
 
 .modalBtnSecondary:hover {
     background: var(--color-accent-hover);
-    color: var(--color-card)
+    color: var(--color-card);
 }
 
+/* ===== АДАПТИВ ===== */
 @media (max-width: 700px) {
-    .page {
-        padding: 16px 12px 32px;
-    }
-
-    .topBar {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 10px;
-        margin-bottom: 16px;
-    }
-
-    .titleBlock h1 {
-        font-size: 20px;
-        letter-spacing: 0;
-    }
-
-    .titleBlock p {
-        font-size: 12px;
-    }
-
-    .backBtn {
-        padding: 10px 14px;
-        font-size: 13px;
-        text-align: center;
-        width: 100%;
-        box-sizing: border-box;
-    }
-
-    /* Табы */
     .tabs {
         flex-direction: column;
         gap: 4px;
@@ -468,11 +317,6 @@
     .tab {
         padding: 10px 14px;
         font-size: 13px;
-    }
-
-    /* Секция */
-    .section {
-        padding: 14px 12px;
     }
 
     .sectionHeader {
@@ -494,7 +338,6 @@
         font-size: 14px;
     }
 
-    /* Таблица — ужимаем */
     .table {
         width: 100%;
         font-size: 13px;
@@ -511,12 +354,10 @@
         letter-spacing: 0;
     }
 
-    /* Скрываем колонки «Срок» и «Порция» только у продуктов */
     .hideMobile {
         display: none;
     }
 
-    /* Колонка с действиями */
     .table th:last-child,
     .table td:last-child {
         width: 78px;
@@ -533,7 +374,6 @@
         font-size: 14px;
     }
 
-    /* Модалка */
     .modal {
         padding: 20px 16px;
         max-width: 100%;

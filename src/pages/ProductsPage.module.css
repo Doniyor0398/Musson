@@ -1,130 +1,4 @@
-.page {
-    min-height: 100vh;
-    padding: 24px 32px 40px;
-    box-sizing: border-box;
-    background: var(--color-bg);
-    max-width: 900px;
-    margin: 0 auto;
-}
-
-/* ===== Верхняя панель ===== */
-.topBar {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 16px;
-    margin-bottom: 24px;
-}
-
-.titleBlock h1 {
-    font-family: var(--font-heading);
-    font-size: 28px;
-    font-weight: 700;
-    color: var(--color-text);
-    letter-spacing: 1px;
-    line-height: 1.15;
-}
-
-.titleBlock p {
-    font-size: 14px;
-    color: var(--color-muted);
-    margin-top: 4px;
-}
-
-/* ===== Кнопка «Назад» ===== */
-.backBtn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 10px 18px;
-    border-radius: var(--radius-md);
-    background: var(--color-card);
-    color: var(--color-text);
-    border: 2px solid var(--color-border);
-    font-size: 14px;
-    font-weight: 700;
-    text-decoration: none;
-    box-shadow: var(--shadow-sm);
-    transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.1s;
-    white-space: nowrap;
-    flex-shrink: 0;
-}
-
-.backBtn:hover {
-    background: var(--color-accent);
-    border-color: var(--color-accent);
-    color: white;
-}
-
-.backBtn:active {
-    transform: scale(0.97);
-}
-
-/* ===== Секции ===== */
-.section {
-    background: var(--color-card);
-    border-radius: var(--radius-lg);
-    padding: 20px 24px;
-    box-shadow: var(--shadow-sm);
-    border: 1px solid var(--color-border);
-    margin-bottom: 16px;
-}
-
-.sectionLabel {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--color-muted);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 12px;
-    display: block;
-}
-
-/* ===== Действия ===== */
-.actions {
-    display: flex;
-    justify-content: center;
-    margin-top: 24px;
-}
-
-.hint {
-    font-size: 13px;
-    color: var(--color-muted);
-    text-align: center;
-    margin-top: 12px;
-}
-
-/* ===== Адаптив ===== */
-@media (max-width: 700px) {
-    .page {
-        padding: 16px 16px 32px;
-    }
-
-    .topBar {
-        gap: 10px;
-        margin-bottom: 16px;
-    }
-
-    .titleBlock h1 {
-        font-size: 20px;
-        letter-spacing: 0;
-    }
-
-    .titleBlock p {
-        font-size: 12px;
-    }
-
-    .backBtn {
-        padding: 10px 14px;
-        font-size: 13px;
-    }
-
-    .section {
-        padding: 16px;
-    }
-}
-
-/* Таб-бар разделов */
+/* Табы */
 .tabs {
     display: flex;
     gap: 6px;
@@ -178,4 +52,18 @@
     font-weight: 600;
     letter-spacing: 1px;
     opacity: 0.55;
+}
+
+/* Действия */
+.actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 24px;
+}
+
+.hint {
+    font-size: 13px;
+    color: var(--color-muted);
+    text-align: center;
+    margin-top: 12px;
 }

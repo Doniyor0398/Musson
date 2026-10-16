@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useProducts } from '../hooks/useProducts';
 import { useEmployees } from '../hooks/useEmployees';
 import { COMPANY_INFO } from '../data/company';
+import { getShelfLife } from '../data/shelfLife';
 import { Field } from '../components/ui/Field/Field';
 import { Button } from '../components/ui/Button/Button';
 import { ProductPicker } from '../features/label-form/ProductPicker';
@@ -11,9 +12,10 @@ import { ModalHours } from '../features/label-form/ModalHours';
 import { ModalQuantity } from '../features/label-form/ModalQuantity';
 import { PrintModal } from '../features/label-preview/PrintModal';
 import { LoadingScreen } from '../components/ui/LoadingScreen/LoadingScreen';
+import { PageLayout } from '../components/layout/PageLayout';
+import { Section } from '../components/layout/Section';
 import { toDateTimeLocal } from '../utils/date';
 import { Link } from 'react-router-dom';
-import { getShelfLife } from '../data/shelfLife';
 import styles from './ProductsPage.module.css';
 
 export default function ProductsPage() {
@@ -56,16 +58,12 @@ export default function ProductsPage() {
     const storageLabel = STORAGE_OPTIONS.find(s => s.id === storage)?.label || '';
 
     return (
-        <div className={styles.page}>
-            <div className={styles.topBar}>
-                <div className={styles.titleBlock}>
-                    <h1>🏷️ Продукты</h1>
-                    <p>Заготовки и полуфабрикаты</p>
-                </div>
-                <Link to="/kitchen" className={styles.backBtn}>
-                    ← Назад
-                </Link>
-            </div>
+        <PageLayout
+            title="Продукты"
+            subtitle="Заготовки и полуфабрикаты"
+            backTo="/kitchen"
+            maxWidth={900}
+        >
             <div className={styles.tabs}>
                 <Link to="/kitchen/defrost" className={styles.tab}>
                     <span className={styles.tabTitle}>❄️ Разморозка</span>
@@ -80,20 +78,19 @@ export default function ProductsPage() {
                 </Link>
             </div>
 
-            <div className={styles.section}>
+            <Section>
                 <ProductPicker
                     products={products}
                     selectedId={selectedProductId}
                     onSelect={setSelectedProductId}
                 />
-            </div>
+            </Section>
 
-            <div className={styles.section}>
-                <span className={styles.sectionLabel}>Условие хранения</span>
+            <Section label="Условие хранения">
                 <StorageCondition value={storage} onChange={setStorage} />
-            </div>
+            </Section>
 
-            <div className={styles.section}>
+            <Section>
                 <Field
                     label="Дата упаковки"
                     id="startDate"
@@ -101,16 +98,15 @@ export default function ProductsPage() {
                     value={startDate}
                     onChange={e => setStartDate(e.target.value)}
                 />
-            </div>
+            </Section>
 
-            <div className={styles.section}>
-                <span className={styles.sectionLabel}>Исполнитель</span>
+            <Section label="Исполнитель">
                 <EmployeePicker
                     employees={employees}
                     selectedId={selectedEmployeeId}
                     onSelect={setSelectedEmployeeId}
                 />
-            </div>
+            </Section>
 
             <div className={styles.actions}>
                 <Button
@@ -124,7 +120,9 @@ export default function ProductsPage() {
             </div>
 
             {!canNext && (
-                <p className={styles.hint}>Выбери продукт, условие хранения и сотрудника</p>
+                <p className={styles.hint}>
+                    Выбери продукт, условие хранения и сотрудника
+                </p>
             )}
 
             {step === 'hours' && (
@@ -159,6 +157,6 @@ export default function ProductsPage() {
                     onPrinted={handleCloseAll}
                 />
             )}
-        </div>
+        </PageLayout>
     );
 }

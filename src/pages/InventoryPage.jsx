@@ -1,20 +1,15 @@
 import { Link } from 'react-router-dom';
 import { ZONES } from '../data/zones';
+import { PageLayout } from '../components/layout/PageLayout';
 import styles from './InventoryPage.module.css';
 
 export default function InventoryPage() {
     return (
-        <div className={styles.page}>
-            <div className={styles.topBar}>
-                <div className={styles.titleBlock}>
-                    <h1>Инвентаризация</h1>
-                    <p>Выбери зону</p>
-                </div>
-                <Link to="/kitchen" className={styles.backBtn}>
-                    ← Назад
-                </Link>
-            </div>
-
+        <PageLayout
+            title="Инвентаризация"
+            subtitle="Выбери зону"
+            backTo="/kitchen"
+        >
             <div className={styles.grid}>
                 {ZONES.map(zone => (
                     <Link
@@ -27,6 +22,6 @@ export default function InventoryPage() {
                     </Link>
                 ))}
             </div>
-        </div>
+        </PageLayout>
     );
 }

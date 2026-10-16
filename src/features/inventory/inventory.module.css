@@ -1,0 +1,329 @@
+/* ===== КАТЕГОРИЯ ===== */
+.category {
+    background: var(--color-card);
+    border-radius: var(--radius-md);
+    padding: 12px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--color-border);
+}
+
+.categoryTitle {
+    font-family: var(--font-heading);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--color-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    padding-left: 4px;
+}
+
+/* ===== СТРОКА ===== */
+.row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 8px;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background 0.15s;
+}
+
+.row:last-child {
+    border-bottom: none;
+}
+
+.rowFilled {
+    background: rgba(163, 191, 111, 0.08);
+    border-radius: 8px;
+}
+
+.rowInfo {
+    flex: 1;
+    min-width: 0;
+}
+
+.rowCode {
+    font-size: 11px;
+    color: var(--color-muted);
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.rowName {
+    font-size: 14px;
+    color: var(--color-text);
+    font-weight: 500;
+    line-height: 1.25;
+    word-wrap: break-word;
+}
+
+.rowRight {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.rowInput {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.input {
+    width: 90px;
+    padding: 10px 12px;
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-size: 16px;
+    font-weight: 700;
+    text-align: right;
+    background: var(--color-card);
+    color: var(--color-text);
+    transition: border-color 0.15s;
+    box-sizing: border-box;
+}
+
+.input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(163, 191, 111, 0.2);
+}
+
+.unit {
+    font-size: 13px;
+    color: var(--color-muted);
+    font-weight: 700;
+    min-width: 24px;
+    text-align: center;
+}
+
+.plusBtn {
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: var(--color-accent);
+    color: white;
+    font-size: 20px;
+    font-weight: 700;
+    cursor: pointer;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s, transform 0.1s;
+    line-height: 1;
+    padding: 0;
+}
+
+.plusBtn:hover {
+    background: var(--color-accent-hover);
+}
+
+.plusBtn:active {
+    transform: scale(0.92);
+}
+
+.hint {
+    font-size: 11px;
+    color: var(--color-muted);
+    font-weight: 600;
+    text-align: right;
+}
+
+/* ===== МОДАЛКИ ===== */
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(30, 58, 95, 0.6);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 1000;
+    animation: fadeIn 0.2s;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.modal {
+    background: var(--color-card);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    width: 100%;
+    max-width: 460px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: var(--shadow-lg);
+}
+
+.modalTitle {
+    font-family: var(--font-heading);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--color-primary);
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.modalProduct {
+    background: var(--color-bg);
+    border-radius: var(--radius-md);
+    padding: 12px 14px;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+.modalProductCode {
+    font-size: 11px;
+    color: var(--color-muted);
+    font-weight: 600;
+}
+
+.modalProductName {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--color-text);
+    margin: 4px 0 8px;
+}
+
+.modalCurrent {
+    font-size: 13px;
+    color: var(--color-muted);
+}
+
+.modalCurrent strong {
+    color: var(--color-primary);
+    font-size: 15px;
+}
+
+.modalHint {
+    margin-top: 6px;
+    font-size: 12px;
+    color: var(--color-primary);
+    font-weight: 600;
+    text-align: right;
+}
+
+.formGroup {
+    margin-bottom: 14px;
+}
+
+.formGroup label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-muted);
+    margin-bottom: 6px;
+}
+
+.formGroup input,
+.formGroup select {
+    width: 100%;
+    padding: 12px 14px;
+    border: 2px solid var(--color-border);
+    border-radius: var(--radius-md);
+    font-size: 14px;
+    background: var(--color-card);
+    color: var(--color-text);
+    font-family: inherit;
+    transition: border-color 0.2s;
+    box-sizing: border-box;
+}
+
+.formGroup input:focus,
+.formGroup select:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 4px rgba(163, 191, 111, 0.15);
+}
+
+.formRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.modalActions {
+    display: flex;
+    gap: 10px;
+    margin-top: 24px;
+}
+
+.modalBtn {
+    flex: 1;
+    padding: 14px;
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+
+.modalBtn:active {
+    transform: scale(0.97);
+}
+
+.modalBtnPrimary {
+    background: var(--color-primary);
+    color: white;
+}
+
+.modalBtnPrimary:hover {
+    background: var(--color-primary-hover);
+}
+
+.modalBtnSecondary {
+    background: var(--color-accent);
+    color: white;
+}
+
+.modalBtnSecondary:hover {
+    background: var(--color-accent-hover);
+}
+
+/* ===== АДАПТИВ ===== */
+@media (max-width: 600px) {
+    .row {
+        padding: 8px 6px;
+    }
+
+    .rowName {
+        font-size: 13px;
+    }
+
+    .input {
+        width: 70px;
+        padding: 8px 8px;
+        font-size: 15px;
+    }
+
+    .plusBtn {
+        width: 32px;
+        height: 32px;
+        font-size: 18px;
+    }
+
+    .category {
+        padding: 10px;
+    }
+
+    .formRow {
+        grid-template-columns: 1fr;
+    }
+}
