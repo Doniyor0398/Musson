@@ -36,6 +36,7 @@ export default function InventoryZonePage() {
     const [responsible, setResponsible] = useState(
         () => sessionStorage.getItem('inventory.responsible') || ''
     );
+    const [showFinishModal, setShowFinishModal] = useState(false);
 
     const { employees, loading: loadingEmp } = useEmployees();
 
@@ -151,16 +152,22 @@ export default function InventoryZonePage() {
         }
     };
 
-    const handleFinish = async () => {
+    const handleFinishClick = () => {
         const sid = sessionIds[type];
         if (!sid) {
             alert('Ничего не введено — нечего завершать');
             return;
         }
-        if (!confirm(`Завершить? Заполнено ${filledCount} из ${totalCount}.`)) return;
+        setShowFinishModal(true);
+    };
+
+    const handleFinishConfirm = async () => {
+        const sid = sessionIds[type];
+        if (!sid) return;
         try {
             await completeSession(sid);
             setSessionIds(prev => ({ ...prev, [type]: null }));
+            setShowFinishModal(false);
             alert('Инвентаризация завершена!');
         } catch (err) {
             alert('Ошибка: ' + err.message);
@@ -229,7 +236,6 @@ export default function InventoryZonePage() {
     }
 
     // ===== Шаг 2: инвентаризация =====
-    // ===== Шаг 2: инвентаризация =====
     return (
         <PageLayout
             title={`${zoneData.icon} ${zoneData.name}`}
@@ -242,8 +248,6 @@ export default function InventoryZonePage() {
                     onClick={() => {
                         sessionStorage.removeItem('inventory.responsible');
                         setResponsible('');
-                        setLists({ product: [], semi: [] });
-                        setSessionIds({ product: null, semi: null });
                     }}
                 >
                     🔄 Сменить
@@ -363,7 +367,7 @@ export default function InventoryZonePage() {
             </div>
 
             <div className={styles.footer}>
-                <button className={styles.finishBtn} onClick={handleFinish}>
+                <button className={styles.finishBtn} onClick={handleFinishClick}>
                     ✓ Завершить инвентаризацию
                 </button>
             </div>
@@ -387,6 +391,48 @@ export default function InventoryZonePage() {
                     onConfirm={handleAddMore}
                     onClose={() => setAddMoreProduct(null)}
                 />
+            )}
+
+            {showFinishModal && (
+                <div
+                    className={styles.modalOverlay}
+                    onClick={() => setShowFinishModal(false)}
+                >
+                    <div
+                        className={styles.finishModal}
+                        onClick={e => e.stopPropagation()}
+                    >
+                        <div className={styles.finishIcon}>⚠️</div>
+                        <div className={styles.finishTitle}>ВАЖНО — ПРОВЕРЬ!</div>
+                        <div className={styles.finishText}>
+                            После завершения изменить данные будет нельзя.
+                        </div>
+                        <div className={styles.finishInfo}>
+                            <div>
+                                Заполнено: <strong>{filledCount}</strong> из {totalCount}
+                            </div>
+                            <div>
+                                Повар: <strong>{responsible}</strong>
+                            </div>
+                        </div>
+                        <div className={styles.finishActions}>
+                            <button
+                                type="button"
+                                className={styles.finishCancel}
+                                onClick={() => setShowFinishModal(false)}
+                            >
+                                Отмена
+                            </button>
+                            <button
+                                type="button"
+                                className={styles.finishConfirm}
+                                onClick={handleFinishConfirm}
+                            >
+                                ✓ Завершить
+                            </button>
+                        </div>
+                    </div>
+                </div>
             )}
         </PageLayout>
     );

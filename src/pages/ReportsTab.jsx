@@ -1,7 +1,8 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { getZoneById } from '../data/zones';
+import { getZoneById, ZONES } from '../data/zones';
 import { subscribeToSessions, deleteSession } from '../firebase/inventory';
+import { downloadInventoryExcel } from '../utils/buildInventoryExcel';
 import styles from './ReportsTab.module.css';
 
 const MONTH_NAMES = [
@@ -30,6 +31,20 @@ function formatMonth(key) {
     return `${MONTH_NAMES[parseInt(m, 10) - 1]} ${y}`;
 }
 
+function todayISO() {
+    const d = new Date();
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
+}
+
+function formatDateRu(iso) {
+    if (!iso) return '—';
+    const [y, m, d] = iso.split('-');
+    return `${d}.${m}.${y}`;
+}
+
 export function ReportsTab() {
     const [sessions, setSessions] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -37,9 +52,13 @@ export function ReportsTab() {
     const [selectedMonth, setSelectedMonth] = useState('all');
     const [deletingAll, setDeletingAll] = useState(false);
 
+    const [excelDate, setExcelDate] = useState(todayISO());
+    const [excelLoading, setExcelLoading] = useState(null); // 'product' | 'semi' | null
+    const [warnModal, setWarnModal] = useState(null);
+    // warnModal: { type: 'no-sessions'|'partial', kind: 'product'|'semi', missing?: [...] }
+
     useEffect(() => {
         let firstLoad = true;
-
         const unsub = subscribeToSessions(
             (data) => {
                 setSessions(data);
@@ -56,7 +75,6 @@ export function ReportsTab() {
                 }
             },
         );
-
         return () => unsub();
     }, []);
 
@@ -89,7 +107,6 @@ export function ReportsTab() {
 
     const handleDeleteFiltered = async () => {
         if (filtered.length === 0) return;
-
         const ok = confirm(
             `Удалить ${filtered.length} сессий?\n\nЭто то, что сейчас на экране (с учётом фильтров).\n\nЭто действие нельзя отменить.`
         );
@@ -118,6 +135,61 @@ export function ReportsTab() {
             alert(`✅ Удалено ${okCount} сессий`);
         } else {
             alert(`Удалено ${okCount}, ошибок: ${errCount}`);
+        }
+    };
+
+    // ===== EXCEL =====
+    const handleExcelClick = (kind) => {
+        if (!excelDate) {
+            alert('Выбери дату');
+            return;
+        }
+
+        // Найти сессии этой даты
+        const daySessions = sessions.filter(s => s.date === excelDate);
+
+        if (daySessions.length === 0) {
+            setWarnModal({ type: 'no-sessions', kind });
+            return;
+        }
+
+        // Какие зоны посчитаны
+        const countedZones = new Set();
+        daySessions.forEach(s => countedZones.add(s.zone));
+
+        const allZoneIds = ZONES.map(z => z.id);
+        const missingZones = allZoneIds.filter(z => !countedZones.has(z));
+
+        if (missingZones.length > 0) {
+            setWarnModal({
+                type: 'partial',
+                kind,
+                missing: missingZones.map(id => getZoneById(id)),
+                countedCount: countedZones.size,
+            });
+            return;
+        }
+
+        // Всё посчитано — качаем сразу
+        doDownload(kind);
+    };
+
+    const doDownload = async (kind) => {
+        setWarnModal(null);
+        setExcelLoading(kind);
+        try {
+            const res = await downloadInventoryExcel({
+                date: excelDate,
+                type: kind,
+            });
+            if (!res.ok) {
+                alert('Файл не создан: ' + (res.reason || 'неизвестная ошибка'));
+            }
+        } catch (err) {
+            console.error(err);
+            alert('Ошибка Excel: ' + err.message);
+        } finally {
+            setExcelLoading(null);
         }
     };
 
@@ -179,6 +251,35 @@ export function ReportsTab() {
                 )}
             </div>
 
+            {/* ===== Скачивание бланка ===== */}
+            <div className={styles.excelBlock}>
+                <div className={styles.excelBlockTitle}>📥 Скачать бланк за дату</div>
+                <div className={styles.excelRow}>
+                    <input
+                        type="date"
+                        className={styles.dateInput}
+                        value={excelDate}
+                        onChange={e => setExcelDate(e.target.value)}
+                    />
+                    <button
+                        type="button"
+                        className={styles.excelBtn}
+                        onClick={() => handleExcelClick('product')}
+                        disabled={excelLoading !== null}
+                    >
+                        {excelLoading === 'product' ? '…' : '📥 Товары'}
+                    </button>
+                    <button
+                        type="button"
+                        className={styles.excelBtn}
+                        onClick={() => handleExcelClick('semi')}
+                        disabled={excelLoading !== null}
+                    >
+                        {excelLoading === 'semi' ? '…' : '📥 ПФ'}
+                    </button>
+                </div>
+            </div>
+
             {loading ? (
                 <div className={styles.empty}>Загрузка...</div>
             ) : filtered.length === 0 ? (
@@ -194,6 +295,83 @@ export function ReportsTab() {
                     ))}
                 </div>
             )}
+
+            {warnModal && (
+                <WarnModal
+                    modal={warnModal}
+                    date={excelDate}
+                    onClose={() => setWarnModal(null)}
+                    onConfirm={() => doDownload(warnModal.kind)}
+                />
+            )}
+        </div>
+    );
+}
+
+function WarnModal({ modal, date, onClose, onConfirm }) {
+    const kindLabel = modal.kind === 'product' ? 'Товары' : 'ПФ';
+
+    return (
+        <div className={styles.warnOverlay} onClick={onClose}>
+            <div className={styles.warnModal} onClick={e => e.stopPropagation()}>
+                <div className={styles.warnIcon}>⚠️</div>
+                {modal.type === 'no-sessions' ? (
+                    <>
+                        <div className={styles.warnTitle}>Нет инвентаризаций</div>
+                        <div className={styles.warnText}>
+                            За <strong>{formatDateRu(date)}</strong> инвентаризации не было.
+                            <br />
+                            Файл не создан.
+                        </div>
+                        <div className={styles.warnActions}>
+                            <button
+                                type="button"
+                                className={styles.warnCancel}
+                                onClick={onClose}
+                            >
+                                ОК
+                            </button>
+                        </div>
+                    </>
+                ) : (
+                    <>
+                        <div className={styles.warnTitle}>ВНИМАНИЕ</div>
+                        <div className={styles.warnText}>
+                            Посчитано <strong>{modal.countedCount} из 9</strong> зон.
+                            <br />
+                            Не считали:
+                        </div>
+                        <ul className={styles.warnList}>
+                            {modal.missing.map(z => (
+                                <li key={z.id}>
+                                    {z.icon} {z.name}
+                                </li>
+                            ))}
+                        </ul>
+                        <div className={styles.warnText}>
+                            В файл <strong>{kindLabel}</strong> попадут{' '}
+                            <strong>все позиции ресторана</strong>. У несчитанных зон —
+                            пустые ячейки.
+                        </div>
+                        <div className={styles.warnActions}>
+                            <button
+                                type="button"
+                                className={styles.warnCancel}
+                                onClick={onClose}
+                            >
+                                Отмена
+                            </button>
+                            <button
+                                type="button"
+                                className={styles.warnConfirm}
+                                onClick={onConfirm}
+                            >
+                                ✓ Скачать
+                            </button>
+                        </div>
+                    </>
+                )}
+            </div>
         </div>
     );
 }
