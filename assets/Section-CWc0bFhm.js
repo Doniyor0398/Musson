@@ -1,1 +1,0 @@
-import{r as e}from"./index-BA5kw8iz.js";var t={section:`_section_19jfq_1`,sectionLabel:`_sectionLabel_19jfq_10`},n=e();function r({children:e,label:r,className:i=``}){return(0,n.jsxs)(`div`,{className:`${t.section} ${i}`,children:[r&&(0,n.jsx)(`div`,{className:t.sectionLabel,children:r}),e]})}export{r as t};
